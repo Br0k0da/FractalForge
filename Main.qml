@@ -1,5 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
+import QtQuick.Window
 
 Window {
   id: root
@@ -15,7 +17,6 @@ Window {
 
   GridLayout {
     anchors.fill: parent
-
     columns: 2
 
     Item {
@@ -54,10 +55,88 @@ Window {
               top: toolsBarMenu.top
               margins: 5
             }
-            height: toolsBarMenu.height * 0.5
+            height: toolsBarMenu.height * 0.55
             radius: 5
             color: "black"
           }
+
+          Rectangle {
+            id: scrollBox
+            color: "#00000000"
+            anchors {
+              bottom: parent.bottom
+              left: toolsBarMenu.left
+              right: toolsBarMenu.right
+              leftMargin: 5
+              rightMargin: 5
+              bottomMargin: 5
+            }
+            height: toolsBarMenu.height * 0.4
+            clip: true
+
+            ListView {
+              id: scrollAria
+              boundsBehavior: Flickable.StopAtBounds
+              width: scrollBox.width
+              anchors.fill: scrollBox
+              model: 10
+              spacing: 5
+              delegate: ItemDelegate {
+                text: "Item" + (index + 1)
+                width: scrollBox.width
+              }
+            }
+          }
+        }
+
+        Button {
+          id: button1
+          anchors {
+            right: toolsBar.right
+            bottom: toolsBar.bottom
+            rightMargin: button2.width + 15
+            bottomMargin: button3.height + 10
+          }
+          text: "1"
+          width: button3.width / 2 - 5
+          height: toolsBar.height * 0.05
+        }
+
+        Button {
+          id: button2
+          anchors {
+            right: toolsBar.right
+            bottom: toolsBar.bottom
+            rightMargin: 5
+            bottomMargin: button3.height + 10
+          }
+          text: "2"
+          width: button3.width / 2 - 5
+          height: toolsBar.height * 0.05
+        }
+
+        Button {
+          id: button3
+          anchors {
+            left: toolsBar.left
+            bottom: toolsBar.bottom
+            margins: 5
+          }
+          text: "3"
+          width: toolsBar.width * 0.4
+          height: toolsBar.height * 0.05
+        }
+
+        Button {
+          id: button4
+          anchors {
+            right: toolsBar.right
+            bottom: toolsBar.bottom
+            margins: 5
+          }
+          text: "4"
+          width: toolsBar.width * 0.4
+          height: toolsBar.height * 0.05
         }
       }
     }
