@@ -23,6 +23,7 @@ Window {
       Layout.fillHeight: true
 
       Rectangle {
+        id: toolsBar
         anchors {
           top: parent.top
           bottom: parent.bottom
@@ -33,44 +34,48 @@ Window {
         width: parent.width * 0.6
         color: "white"
 
-        GridLayout {
+        Rectangle {
+          id: toolsBarMenu
+          anchors {
+            left: toolsBar.left
+            right: toolsBar.right
+            top: toolsBar.top
+            margins: 5
+          }
+          height: toolsBar.height * 0.7
+          radius: 5
+          color: "gray"
+
+          Rectangle {
+            id: preview
+            anchors {
+              left: toolsBarMenu.left
+              right: toolsBarMenu.right
+              top: toolsBarMenu.top
+              margins: 5
+            }
+            height: toolsBarMenu.height * 0.5
+            radius: 5
+            color: "black"
+          }
+        }
+
+
+        /*        GridLayout {
           anchors.fill: parent
           Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Rectangle {
-              anchors {
-                left: parent.left
-                right: parent.right
-                top: parent.top
-                margins: 5
-              }
-              height: parent.height * 0.7
-              radius: 5
-              color: "gray"
+
               GridLayout {
                 anchors.fill: parent
                 columns: 1
                 columnSpacing: 10
-                Item {
-                  Layout.fillWidth: true
-                  Layout.fillHeight: true
-                  Rectangle {
-                    anchors {
-                      left: parent.left
-                      right: parent.right
-                      top: parent.top
-                      margins: 5
-                    }
-                    height: parent.height * 0.5
-                    radius: 5
-                    color: "black"
-                  }
-                }
+
               }
             }
           }
-        }
+        }*/
       }
     }
 
@@ -79,6 +84,7 @@ Window {
       Layout.fillHeight: true
 
       Rectangle {
+        id: displayBlock
         anchors {
           top: parent.top
           bottom: parent.bottom
@@ -89,20 +95,14 @@ Window {
         width: parent.width * 1.35 - 10
         color: "white"
 
-        GridLayout {
-          anchors.fill: parent
-          Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Rectangle {
-              anchors {
-                fill: parent
-                margins: 5
-              }
-              radius: 5
-              color: "black"
-            }
+        Rectangle {
+          id: display
+          anchors {
+            fill: displayBlock
+            margins: 5
           }
+          radius: 5
+          color: "black"
         }
       }
     }
