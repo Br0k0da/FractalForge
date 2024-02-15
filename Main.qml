@@ -59,23 +59,6 @@ Window {
             color: "black"
           }
         }
-
-
-        /*        GridLayout {
-          anchors.fill: parent
-          Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-              GridLayout {
-                anchors.fill: parent
-                columns: 1
-                columnSpacing: 10
-
-              }
-            }
-          }
-        }*/
       }
     }
 
