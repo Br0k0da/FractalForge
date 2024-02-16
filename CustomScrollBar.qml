@@ -18,7 +18,7 @@ Item {
       boundsBehavior: Flickable.StopAtBounds
       width: scrollBox.width
       anchors.fill: scrollBox
-      spacing: scrollBox.height * 0.04
+      spacing: scrollBox.height * 0.028
       model: ListModel {
         ListElement {
           name: "Снежинка Коха"
@@ -44,7 +44,7 @@ Item {
       }
 
       delegate: Rectangle {
-        height: scrollBox.height * 0.2
+        height: scrollBox.height * 0.18
         width: scrollBox.width
         bottomRightRadius: 20
         topRightRadius: 20
@@ -67,6 +67,7 @@ Item {
           font {
             pixelSize: (parent.height + parent.width) * 0.055
           }
+          color: "black"
         }
 
         MouseArea {
