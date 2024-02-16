@@ -5,6 +5,7 @@ import QtQuick.Window
 
 Window {
   id: root
+  title: qsTr("FractalForge")
 
   width: 1024
   minimumWidth: 512
@@ -13,7 +14,6 @@ Window {
 
   visible: true
   color: "#424242"
-  title: qsTr("FractalForge")
 
   GridLayout {
     anchors.fill: parent
@@ -43,9 +43,9 @@ Window {
             top: toolsBar.top
             margins: 5
           }
-          height: toolsBar.height * 0.7
+          height: toolsBar.height * 0.8
           radius: 5
-          color: "gray"
+          color: "#A0A299"
 
           Rectangle {
             id: preview
@@ -60,11 +60,9 @@ Window {
             color: "black"
           }
 
-          Rectangle {
-            id: scrollBox
-            color: "#00000000"
+          ScrollElementsBar {
             anchors {
-              bottom: parent.bottom
+              bottom: toolsBarMenu.bottom
               left: toolsBarMenu.left
               right: toolsBarMenu.right
               leftMargin: 5
@@ -72,20 +70,6 @@ Window {
               bottomMargin: 5
             }
             height: toolsBarMenu.height * 0.4
-            clip: true
-
-            ListView {
-              id: scrollAria
-              boundsBehavior: Flickable.StopAtBounds
-              width: scrollBox.width
-              anchors.fill: scrollBox
-              model: 10
-              spacing: 5
-              delegate: ItemDelegate {
-                text: "Item" + (index + 1)
-                width: scrollBox.width
-              }
-            }
           }
         }
 
