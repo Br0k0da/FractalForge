@@ -1,11 +1,16 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <buttoncontroller.h>
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+
+    ButtonController* button_controller = new ButtonController(&app);
+    qmlRegisterSingletonInstance("fractalforge.ButtonController", 1, 0, "ButtonController", button_controller);
+
     const QUrl url(u"qrc:/Prototype/Main.qml"_qs);
     QObject::connect(
         &engine,
