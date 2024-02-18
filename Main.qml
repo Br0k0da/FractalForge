@@ -239,11 +239,25 @@ Window {
           radius: 5
           color: "black"
 
+
           FractalWindow {
-            anchors.fill: display
+            Component.onCompleted: {
+                xCoord: display.mapToItem(root.parent, 0, 0).x
+                yCoord: display.mapToItem(root.parent, 0, 0).y
+                zCoord: 0.0
+            }
+
+            xCoord: 0
+            yCoord: 0
+            zCoord: 0
           }
         }
       }
     }
   }
+
+    Component.onCompleted: {
+        var globalCoordinares = display.mapToItem(root.parent, 0, 0)
+        console.log("X: " + globalCoordinares.x + " y: " + globalCoordinares.y)
+    }
 }

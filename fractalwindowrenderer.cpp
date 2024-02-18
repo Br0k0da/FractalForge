@@ -49,10 +49,10 @@ void FractalWindowRenderer::paint()
     m_program->enableAttributeArray(0);
 
     float values[] = {
-        -1, -1,
-        1, -1,
-        -1, 1,
-        1, 1
+        -1, -1, // left-bottom
+        1, -1, // right-bottom
+        -1, 1, // left-upper
+        1, 1 // right-upper
     };
 
     // This example relies on (deprecated) client-side pointers for the vertex
@@ -62,7 +62,7 @@ void FractalWindowRenderer::paint()
     m_program->setAttributeArray(0, GL_FLOAT, values, 2);
     m_program->setUniformValue("t", (float) 0.0);
 
-    glViewport(0, 0, m_viewportSize.width(), m_viewportSize.height());
+    glViewport(m_viewportSize.width() * 0.333, m_viewportSize.height() * 0.01, m_viewportSize.width() * 0.663, m_viewportSize.height() * 0.98);
 
     glDisable(GL_DEPTH_TEST);
 
