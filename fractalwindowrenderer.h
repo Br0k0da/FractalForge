@@ -1,8 +1,7 @@
 #ifndef FRACTALWINDOWRENDERER_H
 #define FRACTALWINDOWRENDERER_H
 
-#include "qsize.h"
-#include <QObject>
+#include <QSize>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QQuickWindow>
@@ -11,7 +10,6 @@ class FractalWindowRenderer : public QObject, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:
-    explicit FractalWindowRenderer(QObject *parent = nullptr);
     ~FractalWindowRenderer();
 
     void setViewportSize(const QSize &size) { m_viewportSize = size; }

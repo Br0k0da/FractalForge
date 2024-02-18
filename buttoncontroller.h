@@ -12,6 +12,11 @@
 
 class ButtonController : public QObject
 {
+    /*
+     * Формульные фракталы - fractalType = 1
+     * Хаотические фракталы - fractalType = 2
+     */
+
     Q_OBJECT
 
     Q_PROPERTY(int fractalType READ fractalType WRITE setFractalType NOTIFY fractalTypeChanged FINAL)
@@ -24,7 +29,7 @@ public:
 signals:
     void fractalTypeChanged();
 private:
-    int m_fractalType;
+    int m_fractalType = 1;
 };
 
 #endif // BUTTONCONTROLLER_H
