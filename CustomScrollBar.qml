@@ -6,7 +6,7 @@ Item {
   id: root
 
   signal entered
-  property string someImage: ""
+  property string someImage
 
   Rectangle {
     id: scrollBox
@@ -24,32 +24,31 @@ Item {
         id: scrollModel
         ListElement {
           name: "Снежинка Коха"
-          property string sImage: "assets/images/1.jpg"
+          someImage: "assets/images/1.jpg"
         }
         ListElement {
           name: "Треугольник Серписнокого"
-          property string sImage: "assets/images/2.jpg"
+          someImage: "assets/images/2.jpg"
         }
         ListElement {
           name: "Фракталы Пьера Фату"
-          property string sImage: "assets/images/3.jpg"
+          someImage: "assets/images/3.jpg"
         }
         ListElement {
           name: "Множество Мальдерброта"
-          property string sColor: "green"
-          property string sImage: "assets/images/4.jpg"
+          someImage: "assets/images/4.jpg"
         }
         ListElement {
           name: "Some else"
-          property string sImage: "assets/images/5.jpg"
+          someImage: "assets/images/5.jpg"
         }
         ListElement {
           name: "Some else"
-          property string sImage: "assets/images/6.jpg"
+          someImage: "assets/images/6.jpg"
         }
         ListElement {
           name: "Some else"
-          property string sImage: "assets/images/7.jpg"
+          someImage: "assets/images/7.jpg"
         }
       }
 
@@ -90,16 +89,8 @@ Item {
           hoverEnabled: true
 
           onEntered: {
-            sImage: scrollModel.get(index).sImage
-            sfunctons.setSomeColor(sImage)
+            root.someImage = scrollModel.get(index).someImage
             root.entered()
-          }
-        }
-        QtObject {
-          id: sfunctons
-
-          function setSomeColor(sImage) {
-            root.someImage = sImage
           }
         }
       }
