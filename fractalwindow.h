@@ -3,40 +3,30 @@
 
 #include <QQuickItem>
 #include <QQuickWindow>
-#include <QOpenGLShaderProgram>
-#include <QOpenGLFunctions>
 
-class FractalWindowRenderer : public QObject, protected QOpenGLFunctions
-{
-    Q_OBJECT
-public:
-    ~FractalWindowRenderer();
-
-    void setViewportSize(const QSize &size) { m_viewportSize = size; }
-    void setWindow(QQuickWindow *window) { m_window = window; }
-
-public slots:
-    void initialization();
-    void paint();
-
-private:
-    QSize m_viewportSize;
-    QQuickWindow *m_window = nullptr;
-    QOpenGLShaderProgram *m_program = nullptr;
-};
+class FractalWindowRenderer;
 
 class FractalWindow : public QQuickItem
 {
     Q_OBJECT
+
+    // Q_PROPERTY(QQuickWindow* windowElement READ windowElement WRITE setWindowElement NOTIFY windowElementChanged REQUIRED FINAL)
+
     QML_ELEMENT
 public:
     FractalWindow();
 
     void paintMandelbrot();
 
+    QQuickWindow *windowElement() const;
+    void setWindowElement(QQuickWindow *newWindowElement);
+
 public slots:
     void sync();
     void cleanup();
+
+signals:
+    void windowElementChanged();
 
 private slots:
     void handleWindowChanged(QQuickWindow* wnd);
@@ -44,6 +34,7 @@ private slots:
 private:
     void releaseResources() override;
     FractalWindowRenderer *m_renderer;
+    QQuickWindow *m_windowElement = nullptr;
 };
 
 #endif // FRACTALWINDOW_H
