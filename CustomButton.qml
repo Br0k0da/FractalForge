@@ -9,7 +9,6 @@ Item {
   required property string colorPress
   required property string colorMouse
   required property string colorFont
-  required property int fontSize
   Rectangle {
     radius: 20
     anchors.fill: parent
@@ -22,11 +21,11 @@ Item {
            }
 
     Label {
-      color: "black"
+      color: colorFont
       text: buttonText
       anchors.centerIn: parent
       font {
-        pixelSize: fontSize
+        pixelSize: (root.parent.height + root.parent.width) * 0.05
       }
     }
 
