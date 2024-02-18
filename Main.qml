@@ -58,6 +58,10 @@ Window {
             height: toolsBarMenu.height * 0.55
             radius: 5
             color: "black"
+            Image {
+              id: previewImage
+              anchors.fill: parent
+            }
           }
 
           CustomScrollBar {
@@ -70,9 +74,9 @@ Window {
               bottomMargin: 10
             }
             height: toolsBarMenu.height * 0.35
+            onEntered: previewImage.source = someImage
           }
         }
-
         Rectangle {
           id: buttonsArea
           anchors {
