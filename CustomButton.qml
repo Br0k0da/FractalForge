@@ -4,11 +4,15 @@ import QtQuick.Controls
 
 Item {
   id: root
-  required property string buttonText
-  required property string colorDefualt
-  required property string colorPress
-  required property string colorMouse
-  required property string colorFont
+
+  property string buttonText
+  property string colorDefualt
+  property string colorPress
+  property string colorMouse
+  property string colorFont
+
+  signal clicked
+
   Rectangle {
     radius: 20
     anchors.fill: parent
@@ -31,8 +35,14 @@ Item {
 
     MouseArea {
       id: mouseArea
+
       anchors.fill: parent
+
       hoverEnabled: true
+
+      onClicked: {
+        root.clicked()
+      }
     }
   }
 }

@@ -5,8 +5,10 @@ import QtQuick.Controls
 Item {
   id: root
 
-  signal entered
   property string someImage
+
+  signal entered
+  signal clicked
 
   Rectangle {
     id: scrollBox
@@ -16,6 +18,7 @@ Item {
 
     ListView {
       id: scrollAria
+      currentIndex: -1
       boundsBehavior: Flickable.StopAtBounds
       width: scrollBox.width
       anchors.fill: scrollBox
@@ -59,8 +62,9 @@ Item {
         bottomRightRadius: 20
         topRightRadius: 20
 
-        color: if (mouseArea.containsPress) {
-
+        color: if (ListView.isCurrentItem) {
+                 return "#E0E9C4"
+               } else if (mouseArea.containsPress) {
                  return "#FFFEEE"
                } else if (mouseArea.containsMouse) {
                  return "#DBDAD0"
@@ -91,6 +95,12 @@ Item {
           onEntered: {
             root.someImage = scrollModel.get(index).someImage
             root.entered()
+          }
+
+          onClicked: {
+            scrollAria.currentIndex = index
+            console.log(`${scrollModel.get(index).name} используется!`)
+            root.clicked()
           }
         }
       }

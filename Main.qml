@@ -65,6 +65,7 @@ Window {
           }
 
           CustomScrollBar {
+            id: scrollBar
             anchors {
               bottom: toolsBarMenu.bottom
               left: toolsBarMenu.left
@@ -106,6 +107,8 @@ Window {
             colorPress: "#B2B4AB"
             colorMouse: "#92938C"
             colorFont: "#EDECDF"
+
+            onClicked: console.log("Кнопка 1 сработала!")
           }
 
           CustomButton {
@@ -122,6 +125,8 @@ Window {
             colorPress: "#DCB59F"
             colorMouse: "#B59685"
             colorFont: "#EDECDF"
+
+            onClicked: console.log("Кнопка 2 сработала!")
           }
 
           CustomButton {
@@ -138,6 +143,8 @@ Window {
             colorPress: "#B2B4AB"
             colorMouse: "#858585"
             colorFont: "#EDECDF"
+
+            onClicked: console.log("Кнопка 3 сработала!")
           }
 
           CustomButton {
@@ -154,6 +161,8 @@ Window {
             colorPress: "#B2B4AB"
             colorMouse: "#858585"
             colorFont: "#EDECDF"
+
+            onClicked: console.log("Кнопка 4 сработала!")
           }
         }
       }
