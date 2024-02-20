@@ -18,6 +18,8 @@ qt_add_qml_module(appPrototype
     QML_FILES Main.qml
     QML_FILES CustomScrollBar.qml
     SOURCES buttoncontroller.h buttoncontroller.cpp
+	  SOURCES fractalwindow.h fractalwindow.cpp
+	  SOURCES fractalwindowrenderer.h fractalwindowrenderer.cpp
     QML_FILES CustomButton.qml
 
     RESOURCES
