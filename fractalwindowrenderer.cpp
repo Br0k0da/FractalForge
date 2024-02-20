@@ -44,16 +44,17 @@ void FractalWindowRenderer::initialization()
                                                                              "    c.x = 1.3333 * (coords.x - 0.5) * scale - center.x;"
                                                                              "    c.y = (coords.y) * scale - center.y;"
 
-                                                                             "    int i;"
+                                                                             "    int i = 0;"
+                                                                             "    float x = c.x;"
+                                                                             "    float y = c.x;"
                                                                              "    z.x = 0;"
                                                                              "    z.y = 0;"
-                                                                             "    for(i=0; i<iter; i++) {"
-                                                                             "        float x = (z.x * z.x - z.y * z.y) + c.x;"
-                                                                             "        float y = (z.y * z.x + z.x * z.y) + c.y;"
-
-                                                                             "        if((x * x + y * y) > 4.0) break;"
+                                                                             "    while(i < iter && (x * x + y * y) <= 4.0) {"
+                                                                             "        x = (z.x * z.x - z.y * z.y) + c.x;"
+                                                                             "        y = (z.y * z.x + z.x * z.y) + c.y;"
                                                                              "        z.x = x;"
                                                                              "        z.y = y;"
+                                                                             "        ++i;"
                                                                              "    }"
 
                                                                              "if(i == iter)"
