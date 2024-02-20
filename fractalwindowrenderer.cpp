@@ -34,19 +34,19 @@ void FractalWindowRenderer::initialization()
 
 
 
-        m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
+        m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;" // uniform - параметр из вне. vec2(тип данных HLSL) - vector на 2 элемента
                                                                              "uniform float scale;"
                                                                              "uniform int iter;"
-                                                                             "varying highp vec2 coords;"
+                                                                             "varying highp vec2 coords;" // ХУЙ ЕГО ЗНАЕТ
 
                                                                              "void main() {"
                                                                              "    vec2 z, c;"
-
                                                                              "    c.x = 1.3333 * (coords.x - 0.5) * scale - center.x;"
                                                                              "    c.y = (coords.y) * scale - center.y;"
 
                                                                              "    int i;"
-                                                                             "    z = c;"
+                                                                             "    z.x = 0;"
+                                                                             "    z.y = 0;"
                                                                              "    for(i=0; i<iter; i++) {"
                                                                              "        float x = (z.x * z.x - z.y * z.y) + c.x;"
                                                                              "        float y = (z.y * z.x + z.x * z.y) + c.y;"
@@ -60,6 +60,7 @@ void FractalWindowRenderer::initialization()
                                                                              "    gl_FragColor = vec4(144.0, 144.0, 144.0, 255.0);"
                                                                              "else"
                                                                              "    gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
+
                                                                              "}");
 
         m_program->bindAttributeLocation("vertices", 0);

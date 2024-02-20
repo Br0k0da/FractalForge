@@ -59,8 +59,6 @@ Item {
         id: delegate
         height: scrollBox.height * 0.18
         width: scrollBox.width
-        bottomRightRadius: 20
-        topRightRadius: 20
 
         color: if (ListView.isCurrentItem) {
                  return "#E0E9C4"
