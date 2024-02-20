@@ -59,9 +59,14 @@ Window {
             height: toolsBarMenu.height * 0.55
             radius: 5
             color: "black"
+            Image {
+              id: previewImage
+              anchors.fill: parent
+            }
           }
 
           CustomScrollBar {
+            id: scrollBar
             anchors {
               bottom: toolsBarMenu.bottom
               left: toolsBarMenu.left
@@ -71,144 +76,94 @@ Window {
               bottomMargin: 10
             }
             height: toolsBarMenu.height * 0.35
+            onEntered: previewImage.source = someImage
           }
         }
-
         Rectangle {
-          id: button1
+          id: buttonsArea
           anchors {
             right: toolsBar.right
-            bottom: toolsBar.bottom
-            rightMargin: button2.width + 15
-            bottomMargin: button3.height + 10
-          }
-          radius: 20
-          width: button3.width / 2 - 5
-          height: toolsBar.height * 0.05
-          color: if (mouseArea1.containsPress) {
-                   return "#B2B4AB"
-                 } else if (mouseArea1.containsMouse) {
-                   return "#92938C"
-                 } else {
-                   return "#A0A299"
-                 }
-
-          Label {
-            color: "#EDECDF"
-            text: "empty"
-            anchors.centerIn: button1
-            font {
-              pixelSize: (parent.height + parent.width) * 0.2
-            }
-          }
-
-          MouseArea {
-            id: mouseArea1
-            anchors.fill: parent
-            hoverEnabled: true
-          }
-        }
-
-        Rectangle {
-          id: button2
-          anchors {
-            right: toolsBar.right
-            bottom: toolsBar.bottom
-            rightMargin: 5
-            bottomMargin: button3.height + 10
-          }
-          radius: 20
-          width: button3.width / 2 - 5
-          height: toolsBar.height * 0.05
-          color: if (mouseArea2.containsPress) {
-                   return "#DCB59F"
-                 } else if (mouseArea2.containsMouse) {
-                   return "#B59685"
-                 } else {
-                   return "#C8A591"
-                 }
-
-          Label {
-            color: "#EDECDF"
-            text: "empty"
-            anchors.centerIn: button2
-            font {
-              pixelSize: (parent.height + parent.width) * 0.2
-            }
-          }
-
-          MouseArea {
-            id: mouseArea2
-            anchors.fill: parent
-            hoverEnabled: true
-          }
-        }
-
-        Rectangle {
-          id: button3
-          anchors {
             left: toolsBar.left
             bottom: toolsBar.bottom
-            margins: 5
+            bottomMargin: 5
+            leftMargin: 5
+            rightMargin: 5
           }
-          radius: 20
-          width: toolsBar.width * 0.4
-          height: toolsBar.height * 0.05
-          color: if (mouseArea3.containsPress) {
-                   return "#BFBFBF"
-                 } else if (mouseArea3.containsMouse) {
-                   return "#858585"
-                 } else {
-                   return "#9C9C9C"
-                 }
 
-          Label {
-            color: "#EDECDF"
-            text: "Формульный"
-            anchors.centerIn: button3
-            font {
-              pixelSize: (parent.height + parent.width) * 0.12
+          height: toolsBar.height * 0.12
+          color: "#00000000"
+
+          CustomButton {
+            id: button1
+            anchors {
+              top: parent.top
+              right: parent.right
+              rightMargin: width + 5
             }
+            width: parent.width * 0.22
+            height: parent.height * 0.45
+
+            buttonText: "empty"
+            colorDefualt: "#A0A299"
+            colorPress: "#B2B4AB"
+            colorMouse: "#92938C"
+            colorFont: "#EDECDF"
+
+            onClicked: console.log("Кнопка 1 сработала!")
           }
 
-          MouseArea {
-            id: mouseArea3
-            anchors.fill: parent
-            hoverEnabled: true
-          }
-        }
-
-        Rectangle {
-          id: button4
-          anchors {
-            right: toolsBar.right
-            bottom: toolsBar.bottom
-            margins: 5
-          }
-          radius: 20
-          color: if (mouseArea4.containsPress) {
-                   return "#BFBFBF"
-                 } else if (mouseArea4.containsMouse) {
-                   return "#858585"
-                 } else {
-                   return "#9C9C9C"
-                 }
-          width: toolsBar.width * 0.4
-          height: toolsBar.height * 0.05
-
-          Label {
-            color: "#EDECDF"
-            text: "Хаотичный"
-            anchors.centerIn: button4
-            font {
-              pixelSize: (parent.height + parent.width) * 0.12
+          CustomButton {
+            id: button2
+            anchors {
+              top: parent.top
+              right: parent.right
             }
+            width: parent.width * 0.22
+            height: parent.height * 0.45
+
+            buttonText: "empty"
+            colorDefualt: "#C8A591"
+            colorPress: "#DCB59F"
+            colorMouse: "#B59685"
+            colorFont: "#EDECDF"
+
+            onClicked: console.log("Кнопка 2 сработала!")
           }
 
-          MouseArea {
-            id: mouseArea4
-            anchors.fill: parent
-            hoverEnabled: true
+          CustomButton {
+            id: button3
+            anchors {
+              bottom: parent.bottom
+              left: parent.left
+            }
+            width: parent.width * 0.45
+            height: parent.height * 0.45
+
+            buttonText: "Формульный"
+            colorDefualt: "#9C9C9C"
+            colorPress: "#B2B4AB"
+            colorMouse: "#858585"
+            colorFont: "#EDECDF"
+
+            onClicked: console.log("Кнопка 3 сработала!")
+          }
+
+          CustomButton {
+            id: button4
+            anchors {
+              bottom: parent.bottom
+              right: parent.right
+            }
+            width: parent.width * 0.45
+            height: parent.height * 0.45
+
+            buttonText: "Хаотичный"
+            colorDefualt: "#9C9C9C"
+            colorPress: "#B2B4AB"
+            colorMouse: "#858585"
+            colorFont: "#EDECDF"
+
+            onClicked: console.log("Кнопка 4 сработала!")
           }
         }
       }

@@ -18,8 +18,18 @@ qt_add_qml_module(appPrototype
     QML_FILES Main.qml
     QML_FILES CustomScrollBar.qml
     SOURCES buttoncontroller.h buttoncontroller.cpp
-	SOURCES fractalwindow.h fractalwindow.cpp
-	SOURCES fractalwindowrenderer.h fractalwindowrenderer.cpp
+	  SOURCES fractalwindow.h fractalwindow.cpp
+	  SOURCES fractalwindowrenderer.h fractalwindowrenderer.cpp
+    QML_FILES CustomButton.qml
+
+    RESOURCES
+    assets/images/1.jpg
+    assets/images/2.jpg
+    assets/images/3.jpg
+    assets/images/4.jpg
+    assets/images/5.jpg
+    assets/images/6.jpg
+    assets/images/7.jpg
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
