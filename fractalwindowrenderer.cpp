@@ -33,11 +33,12 @@ void FractalWindowRenderer::initialization()
         //                                             "}");
 
 
-
-        m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;" // uniform - параметр из вне. vec2(тип данных HLSL) - vector на 2 элемента
+        // Множество Мандельброта
+        //  /*
+        m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
                                                                              "uniform int iter;"
-                                                                             "varying highp vec2 coords;" // ХУЙ ЕГО ЗНАЕТ
+                                                                             "varying highp vec2 coords;"
 
                                                                              "void main() {"
                                                                              "    vec2 z, c;"
@@ -46,7 +47,7 @@ void FractalWindowRenderer::initialization()
 
                                                                              "    int i = 0;"
                                                                              "    float x = c.x;"
-                                                                             "    float y = c.x;"
+                                                                             "    float y = c.y;"
                                                                              "    z.x = 0;"
                                                                              "    z.y = 0;"
                                                                              "    while(i < iter && (x * x + y * y) <= 4.0) {"
@@ -63,7 +64,39 @@ void FractalWindowRenderer::initialization()
                                                                              "    gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
 
                                                                              "}");
+        // */
+        // Фрактал Жулья
+        /*
+        m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
+                                                                             "uniform float scale;"
+                                                                             "uniform int iter;"
+                                                                             "varying highp vec2 coords;"
 
+                                                                             "void main() {"
+                                                                             "    vec2 c, z;"
+                                                                             "    z.x = 1.3333 * (coords.x - 0.5) * scale - center.x;"
+                                                                             "    z.y = (coords.y) * scale - center.y;"
+
+                                                                             "    int i = 0;"
+                                                                             "    float x = z.x;"
+                                                                             "    float y = z.y;"
+                                                                             "    c.x = -0.5;"
+                                                                             "    c.y = 0;"
+                                                                             "    while(i < iter && (x * x + y * y) <= 4.0) {"
+                                                                             "        x = (z.x * z.x - z.y * z.y) + c.x;"
+                                                                             "        y = (z.y * z.x + z.x * z.y) + c.y;"
+                                                                             "        z.x = x;"
+                                                                             "        z.y = y;"
+                                                                             "        ++i;"
+                                                                             "    }"
+
+                                                                             "if(i == iter)"
+                                                                             "    gl_FragColor = vec4(144.0, 0.0, 0.0, 1.0);"
+                                                                             "else"
+                                                                             "    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);"
+
+                                                                             "}");
+        */
         m_program->bindAttributeLocation("vertices", 0);
         m_program->link();
 
@@ -98,7 +131,10 @@ void FractalWindowRenderer::paint()
     // m_program->setUniformValue("t", (float) 0.0);
     m_program->setUniformValue("scale", (float)1);
     m_program->setUniformValue("center", QPointF(0.0, 0.0));
-    m_program->setUniformValue("iter", 512);
+    m_program->setUniformValue("iter", 1000);
+    m_program->setUniformValue("c", QPointF(0.0, 0.0));
+    m_program->setUniformValue("b", QPointF(0.0, 0.0));
+    m_program->setUniformValue("a", QPointF(0.0, 0.0));
 
     glViewport(m_viewportSize.width() * 0.333, m_viewportSize.height() * 0.01, m_viewportSize.width() * 0.663, m_viewportSize.height() * 0.98);
 
