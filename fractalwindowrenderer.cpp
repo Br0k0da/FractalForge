@@ -34,7 +34,7 @@ void FractalWindowRenderer::initialization()
 
 
         // Множество Мандельброта
-        //  /*
+         /*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
                                                                              "uniform int iter;"
@@ -64,7 +64,7 @@ void FractalWindowRenderer::initialization()
                                                                              "    gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
 
                                                                              "}");
-        // */
+         */
         // Фрактал Жулья
         /*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
@@ -82,6 +82,7 @@ void FractalWindowRenderer::initialization()
                                                                              "    float y = z.y;"
                                                                              "    c.x = -0.5;"
                                                                              "    c.y = 0;"
+
                                                                              "    while(i < iter && (x * x + y * y) <= 4.0) {"
                                                                              "        x = (z.x * z.x - z.y * z.y) + c.x;"
                                                                              "        y = (z.y * z.x + z.x * z.y) + c.y;"
@@ -94,9 +95,58 @@ void FractalWindowRenderer::initialization()
                                                                              "    gl_FragColor = vec4(144.0, 0.0, 0.0, 1.0);"
                                                                              "else"
                                                                              "    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);"
-
                                                                              "}");
         */
+        m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
+                                                                             "uniform vec2 a_koh;"
+                                                                             "uniform vec2 b_koh;"
+                                                                             "uniform vec2 c_koh;"
+                                                                             "uniform float scale;"
+                                                                             "uniform float k;"
+                                                                             "uniform int iter_koh;"
+                                                                             "varying highp vec2 coords;"
+
+                                                                             "void f(vec2 a, vec2 b, vec2 c, int iter) {"
+                                                                             "    vec2 z;"
+                                                                             "    z.x = 1.3333 * (coords.x - 0.5) * scale - center.x;"
+                                                                             "    z.y = (coords.y) * scale - center.y;"
+
+                                                                             "    float k_ab = k, k_bc = -k, b_ac, b_b;"
+                                                                             "    int znak = 1;"
+                                                                             "    if(b.x < a.x){"
+                                                                             "        znak = -1;"
+                                                                             "        k_ab = -k;"
+                                                                             "        k_bc = k;"
+                                                                             "    }"
+                                                                             "    b_ac = a.y;"
+                                                                             "    b_b = a.y - k_ab * a.x;"
+
+                                                                             "    if(znak * (k_ab * z.x + b_b - z.y) >= 0 && znak * (k_bc * z.x + b_b - z.y) >= 0 && znak * (b_ac - z.y) <= 0)"
+                                                                             "        gl_FragColor = vec4(144.0, 0.0, 0.0, 1.0);"
+                                                                             "    else"
+                                                                             "        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);"
+
+                                                                             "    --iter;"
+                                                                             /*"    if(iter != 0){"
+                                                                             "      vec2 a_n, b_n, c_n;"
+                                                                             "      float w = abs(c.x - a.x);"
+                                                                             "      float h = w * cos(30.0);"
+                                                                             "      if(znak == 1){"
+                                                                             "          b_n.x = a.x + w / 6;"
+                                                                             "          b_n.y = a.y + h / 3;"
+                                                                             "          c_n.x = a.x + w / 3;"
+                                                                             "          c_n.y = b.y - h / 3;"
+                                                                             "          a_n.x = c.x - w / 3;"
+                                                                             "          a_n.y = c.y;"
+                                                                             "          f(a_n, b_n, c_n, iter);"
+                                                                             "      }"
+                                                                             "      "
+                                                                             "    }"*/
+                                                                             "}"
+
+                                                                             "void main() {"
+                                                                             "    f(a_koh,b_koh,c_koh,iter_koh);"
+                                                                             "}");
         m_program->bindAttributeLocation("vertices", 0);
         m_program->link();
 
@@ -129,12 +179,15 @@ void FractalWindowRenderer::paint()
 
     m_program->setAttributeArray(0, GL_FLOAT, values, 2);
     // m_program->setUniformValue("t", (float) 0.0);
-    m_program->setUniformValue("scale", (float)1);
+    m_program->setUniformValue("scale", (float)2);
     m_program->setUniformValue("center", QPointF(0.0, 0.0));
     m_program->setUniformValue("iter", 1000);
-    m_program->setUniformValue("c", QPointF(0.0, 0.0));
-    m_program->setUniformValue("b", QPointF(0.0, 0.0));
-    m_program->setUniformValue("a", QPointF(0.0, 0.0));
+    m_program->setUniformValue("iter_koh", 2);
+    m_program->setUniformValue("k", (float)1.75);
+    m_program->setUniformValue("a_koh", QPointF(-0.8, 0.7));
+    m_program->setUniformValue("b_koh", QPointF(0.0, 0.7));
+    m_program->setUniformValue("c_koh", QPointF(0.8, -0.7));
+
 
     glViewport(m_viewportSize.width() * 0.333, m_viewportSize.height() * 0.01, m_viewportSize.width() * 0.663, m_viewportSize.height() * 0.98);
 
