@@ -1,5 +1,5 @@
 #include "fractalwindowrenderer.h"
-
+#include <iostream>
 
 FractalWindowRenderer::~FractalWindowRenderer()
 {
@@ -34,7 +34,7 @@ void FractalWindowRenderer::initialization()
 
 
         // Множество Мандельброта
-         /*
+        /*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
                                                                              "uniform int iter;"
@@ -44,64 +44,139 @@ void FractalWindowRenderer::initialization()
                                                                              "  vec2 z, c;"
                                                                              "  c.x = 1.3333 * (coords.x - 0.5) * scale - center.x;"
                                                                              "  c.y = (coords.y) * scale - center.y;"
-
-                                                                             "  int i = 0;"
-                                                                             "  float x = c.x;"
-                                                                             "  float y = c.y;"
                                                                              "  z.x = 0;"
                                                                              "  z.y = 0;"
+
+                                                                             "  int i = 0;"
+                                                                             "  float x = z.x;"
+                                                                             "  float y = z.y;"
+
                                                                              "  while(i < iter && (x * x + y * y) <= 4.0) {"
                                                                              "      x = (z.x * z.x - z.y * z.y) + c.x;"
-                                                                             "      y = (z.y * z.x + z.x * z.y) + c.y;"
+                                                                             "      y = (2 * z.x * z.y) + c.y;"
                                                                              "      z.x = x;"
                                                                              "      z.y = y;"
                                                                              "      ++i;"
                                                                              "  }"
 
                                                                              "if(i == iter)"
-                                                                             "  gl_FragColor = vec4(144.0, 144.0, 144.0, 255.0);"
+                                                                             "  gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
                                                                              "}");
-         */
+        */
         // Фрактал Жулья
         /*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
-                                                                             "uniform int iter;"
+                                                                             "uniform float a_gulie;"
+                                                                             "uniform int iter_gulie;"
                                                                              "varying highp vec2 coords;"
 
                                                                              "void main() {"
                                                                              "  vec2 c, z;"
-                                                                             "  z.x = 1.3333 * (coords.x - 0.5) * scale - center.x;"
+                                                                             "  float r = 0.7885;"
+                                                                             "  float Pi = 3.14159265358979323846;"
+                                                                             "  c.x = r * cos(Pi * a_gulie);"
+                                                                             "  c.y = r * sin(Pi * a_gulie);"
+                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x;"
                                                                              "  z.y = (coords.y) * scale - center.y;"
 
                                                                              "  int i = 0;"
                                                                              "  float x = z.x;"
                                                                              "  float y = z.y;"
-                                                                             "  c.x = -0.5;"
-                                                                             "  c.y = 0;"
 
-                                                                             "  while(i < iter && (x * x + y * y) <= 4.0) {"
+                                                                             "  while(i < iter_gulie && (x * x + y * y) <= 4.0) {"
                                                                              "      x = (z.x * z.x - z.y * z.y) + c.x;"
-                                                                             "      y = (z.y * z.x + z.x * z.y) + c.y;"
+                                                                             "      y = (2 * z.x * z.y) + c.y;"
                                                                              "      z.x = x;"
                                                                              "      z.y = y;"
                                                                              "      ++i;"
                                                                              "  }"
 
-                                                                             "if(i == iter)"
-                                                                             "  gl_FragColor = vec4(144.0, 0.0, 0.0, 1.0);"
+                                                                             "if(i == iter_gulie)"
+                                                                             "  gl_FragColor = vec4(0.0, 122.0, 0.0, 1.0);"
                                                                              "}");
         */
+
+        //
         ///*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
-                                                                             "uniform vec2 a_koh;"
-                                                                             "uniform vec2 b_koh;"
-                                                                             "uniform vec2 c_koh;"
+                                                                             "uniform vec2 a_base;"
+                                                                             "uniform vec2 b_base;"
+                                                                             "uniform vec2 c_base;"
+                                                                             "uniform float scale;"
+                                                                             "uniform float k;"
+                                                                             "uniform int iter_serp;"
+                                                                             "varying highp vec2 coords;"
+
+
+                                                                             "bool check(vec2 a, vec2 b, vec2 c, vec2 z){"
+                                                                             "  float k_ab = -k, k_bc = k, b_ac, b_ab, b_bc;"
+                                                                             "  b_ac = c.y;"
+                                                                             "  b_ab = a.y - k_ab * a.x;"
+                                                                             "  b_bc = c.y - k_bc * c.x;"
+                                                                             "  if(k_ab * z.x + b_ab - z.y <= 0 && k_bc * z.x + b_bc - z.y <= 0 && b_ac - z.y >= 0)"
+                                                                             "      return true;"
+                                                                             "  return false;"
+                                                                             "}"
+
+
+                                                                             "void main() {"
+                                                                             "  vec2 z, a, b, c, a_n, b_n, c_n;"
+                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x;"
+                                                                             "  z.y = (coords.y) * scale - center.y;"
+                                                                             "  float w = abs(c_base.x - a_base.x);"
+                                                                             "  float h = w * cos(radians(30.0f));"
+
+                                                                             "  float k_ab = k, k_bc = -k, b_ac, b_ab, b_bc;"
+                                                                             "  b_ac = c_base.y;"
+                                                                             "  b_ab = a_base.y - k_ab * a_base.x;"
+                                                                             "  b_bc = c_base.y - k_bc * c_base.x;"
+                                                                             "  if(k_ab * z.x + b_ab - z.y >= 0 && k_bc * z.x + b_bc - z.y >= 0 && b_ac - z.y <= 0)"
+                                                                             "      gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
+
+                                                                             "  for(float st = 1.0; st < iter_serp; ++st){"
+                                                                             "      a_n.x = a_base.x + w / pow(2.0, st + 1.0);"
+                                                                             "      a_n.y = a_base.y + h / pow(2.0, st);"
+                                                                             "      b_n.x = a_base.x + w / pow(2.0, st);"
+                                                                             "      b_n.y = a_base.y;"
+                                                                             "      c_n.x = a_n.x + w / pow(2.0, st);"
+                                                                             "      c_n.y = a_n.y;"
+
+                                                                             "      for(int i = 0; i < pow(2, st) - 1; ++i){"
+                                                                             "          a = a_n;"
+                                                                             "          b = b_n;"
+                                                                             "          c = c_n;"
+                                                                             "          for(int j = 0; j < pow(2, st) - 1; ++j){"
+                                                                             "              if(check(a, b, c, z)){"
+                                                                             "                  gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);"
+                                                                             "                  break;"
+                                                                             "              }"
+                                                                             "              a.x += w / pow(2.0, st);"
+                                                                             "              b.x += w / pow(2.0, st);"
+                                                                             "              c.x += w / pow(2.0, st);"
+                                                                             "          }"
+
+                                                                             "          a_n.x = b_n.x;"
+                                                                             "          a_n.y += h / pow(2, st);"
+                                                                             "          b_n.x = c_n.x;"
+                                                                             "          b_n.y += a_n.y;"
+                                                                             "          c_n.x += w / pow(2.0, st + 1.0);"
+                                                                             "          c_n.y = a_n.y;"
+                                                                             "      }"
+                                                                             "  }"
+                                                                             "}");
+        //*/
+
+        // Снежинка Коха
+        /*
+        m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
+                                                                             "uniform vec2 a_base;"
+                                                                             "uniform vec2 b_base;"
+                                                                             "uniform vec2 c_base;"
                                                                              "uniform float scale;"
                                                                              "uniform float k;"
                                                                              "uniform int iter_koh;"
                                                                              "varying highp vec2 coords;"
-
 
 
                                                                              "bool check(vec2 a, vec2 b, vec2 c, vec2 z){"
@@ -212,20 +287,6 @@ void FractalWindowRenderer::initialization()
                                                                              "      if(fifth(a_n, b_n, c_n,z))"
                                                                              "          return true;"
 
-                                                                             /*"      st = 2.0;"
-                                                                             "      iter = 5;"
-                                                                             "      while(iter != iter_koh){"
-                                                                             "          a_const = a;"
-                                                                             "          for(int i = 0; i < pow(3, st - 1.0); ++i){"
-                                                                             "              a_n = l_a(a_const, znak, st, w, h);"
-                                                                             "              b_n = l_b(a_const, znak, st, w, h);"
-                                                                             "              c_n = l_c(a_const, znak, st, w, h);"
-                                                                             "              a_const.x = a_const.x + w / (2 * pow(3, st - 1.0));"
-                                                                             "              a_const.y = a_const.y + znak * (h / pow(3, st - 1.0));"
-                                                                             "          }"
-                                                                             "          ++iter;"
-                                                                             "          ++st;"
-                                                                             "      }"*/
 
                                                                              "      st = 1.0;"
                                                                              "      a_n = c_a(a, znak, st, w, h);"
@@ -235,20 +296,6 @@ void FractalWindowRenderer::initialization()
                                                                              "      if(fifth(a_n, b_n, c_n,z))"
                                                                              "          return true;"
 
-                                                                             /*"      st = 2.0;"
-                                                                             "      iter = 5;"
-                                                                             "      while(iter != iter_koh){"
-                                                                             "          a_const = a;"
-                                                                             "          for(int i = 0; i < pow(3, st - 1.0); ++i){"
-                                                                             "              a_n = c_a(a_const, znak, st, w, h);"
-                                                                             "              b_n = c_b(a_const, znak, st, w, h);"
-                                                                             "              c_n = c_c(a_const, znak, st, w, h);"
-                                                                             "              a_const.x = a_const.x + w / pow(3, st - 1.0);"
-                                                                             "          }"
-                                                                             "          ++iter;"
-                                                                             "          ++st;"
-                                                                             "      }"*/
-
                                                                              "      st = 1.0;"
                                                                              "      a_n = r_a(c, znak, st, w, h);"
                                                                              "      b_n = r_b(c, znak, st, w, h);"
@@ -257,20 +304,7 @@ void FractalWindowRenderer::initialization()
                                                                              "      if(fifth(a_n, b_n, c_n,z))"
                                                                              "          return true;"
 
-                                                                             /*"      st = 2.0;"
-                                                                             "      iter = 5;"
-                                                                             "      while(iter != iter_koh){"
-                                                                             "          c_const = c;"
-                                                                             "          for(int i = 0; i < pow(3, st - 1.0); ++i){"
-                                                                             "              a_n = r_a(c_const, znak, st, w, h);"
-                                                                             "              b_n = r_b(c_const, znak, st, w, h);"
-                                                                             "              c_n = r_c(c_const, znak, st, w, h);"
-                                                                             "              c_const.x = c_const.x - w / (2 * pow(3, st - 1.0));"
-                                                                             "              c_const.y = c_const.y + znak * (h / pow(3, st - 1.0));"
-                                                                             "          }"
-                                                                             "          ++iter;"
-                                                                             "          ++st;"
-                                                                             "      }"*/
+
                                                                              "  }"
                                                                              "  return false;"
                                                                              "}"
@@ -573,18 +607,17 @@ void FractalWindowRenderer::initialization()
 
 
                                                                              "void main() {"
-                                                                             "  vec2 z, a = a_koh, b = b_koh, c = c_koh;"
+                                                                             "  vec2 z, a = a_base, b = b_base, c = c_base;"
                                                                              "  z.x = 1.3333 * (coords.x) * scale - center.x;"
                                                                              "  z.y = (coords.y - 0.22) * scale - center.y;"
 
-                                                                             "  if(first(a_koh, b_koh, c_koh, z))"
+                                                                             "  if(first(a_base, b_base, c_base, z))"
                                                                              "      gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
 
                                                                              "}");
-        //*/
+        */
         m_program->bindAttributeLocation("vertices", 0);
         m_program->link();
-
     }
 }
 
@@ -615,15 +648,17 @@ void FractalWindowRenderer::paint()
     m_program->setAttributeArray(0, GL_FLOAT, values, 2);
     // m_program->setUniformValue("t", (float) 0.0);
     m_program->setUniformValue("scale", (float)1);
+    m_program->setUniformValue("a_gulie", (float)0.5);
     m_program->setUniformValue("center", QPointF(0.0, 0.0));
     m_program->setUniformValue("iter", 1000);
+    m_program->setUniformValue("iter_gulie", 81);
+    m_program->setUniformValue("iter_serp", 7);
     m_program->setUniformValue("iter_koh", 5);
     m_program->setUniformValue("k", (float)1.75);
-    m_program->setUniformValue("a_koh", QPointF(-0.8, -0.7));
-    m_program->setUniformValue("b_koh", QPointF(0.0, 0.7));
-    m_program->setUniformValue("c_koh", QPointF(0.8, -0.7));
-
-
+    m_program->setUniformValue("a_base", QPointF(-0.8, -0.7));
+    m_program->setUniformValue("b_base", QPointF(0.0, 0.7));
+    m_program->setUniformValue("c_base", QPointF(0.8, -0.7));
+    //std::cout<<'1' << std::endl;
     glViewport(m_viewportSize.width() * 0.333, m_viewportSize.height() * 0.01, m_viewportSize.width() * 0.663, m_viewportSize.height() * 0.98);
 
     glDisable(GL_DEPTH_TEST);
