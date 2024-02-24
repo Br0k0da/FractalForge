@@ -97,7 +97,7 @@ void FractalWindowRenderer::initialization()
                                                                              "}");
         */
 
-        //
+        // Треугольники Серпинского
         ///*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform vec2 a_base;"
@@ -131,37 +131,38 @@ void FractalWindowRenderer::initialization()
                                                                              "  b_ac = c_base.y;"
                                                                              "  b_ab = a_base.y - k_ab * a_base.x;"
                                                                              "  b_bc = c_base.y - k_bc * c_base.x;"
-                                                                             "  if(k_ab * z.x + b_ab - z.y >= 0 && k_bc * z.x + b_bc - z.y >= 0 && b_ac - z.y <= 0)"
+                                                                             "  if(k_ab * z.x + b_ab - z.y >= 0 && k_bc * z.x + b_bc - z.y >= 0 && b_ac - z.y <= 0){"
                                                                              "      gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
 
-                                                                             "  for(float st = 1.0; st < iter_serp; ++st){"
-                                                                             "      a_n.x = a_base.x + w / pow(2.0, st + 1.0);"
-                                                                             "      a_n.y = a_base.y + h / pow(2.0, st);"
-                                                                             "      b_n.x = a_base.x + w / pow(2.0, st);"
-                                                                             "      b_n.y = a_base.y;"
-                                                                             "      c_n.x = a_n.x + w / pow(2.0, st);"
-                                                                             "      c_n.y = a_n.y;"
-
-                                                                             "      for(int i = 0; i < pow(2, st) - 1; ++i){"
-                                                                             "          a = a_n;"
-                                                                             "          b = b_n;"
-                                                                             "          c = c_n;"
-                                                                             "          for(int j = 0; j < pow(2, st) - 1; ++j){"
-                                                                             "              if(check(a, b, c, z)){"
-                                                                             "                  gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);"
-                                                                             "                  break;"
-                                                                             "              }"
-                                                                             "              a.x += w / pow(2.0, st);"
-                                                                             "              b.x += w / pow(2.0, st);"
-                                                                             "              c.x += w / pow(2.0, st);"
-                                                                             "          }"
-
-                                                                             "          a_n.x = b_n.x;"
-                                                                             "          a_n.y += h / pow(2, st);"
-                                                                             "          b_n.x = c_n.x;"
-                                                                             "          b_n.y += a_n.y;"
-                                                                             "          c_n.x += w / pow(2.0, st + 1.0);"
+                                                                             "      for(float st = 1.0; st < iter_serp; ++st){"
+                                                                             "          a_n.x = a_base.x + w / pow(2.0, st + 1.0);"
+                                                                             "          a_n.y = a_base.y + h / pow(2.0, st);"
+                                                                             "          b_n.x = a_base.x + w / pow(2.0, st);"
+                                                                             "          b_n.y = a_base.y;"
+                                                                             "          c_n.x = a_n.x + w / pow(2.0, st);"
                                                                              "          c_n.y = a_n.y;"
+
+                                                                             "          for(int i = 0; i < pow(2, st) - 1; ++i){"
+                                                                             "              a = a_n;"
+                                                                             "              b = b_n;"
+                                                                             "              c = c_n;"
+                                                                             "              for(int j = i; j < pow(2, st) - 1; ++j){"
+                                                                             "                  if(check(a, b, c, z)){"
+                                                                             "                      gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);"
+                                                                             "                      break;"
+                                                                             "                  }"
+                                                                             "                  a.x += w / pow(2.0, st);"
+                                                                             "                  b.x += w / pow(2.0, st);"
+                                                                             "                  c.x += w / pow(2.0, st);"
+                                                                             "              }"
+
+                                                                             "              a_n.x = b_n.x;"
+                                                                             "              a_n.y += h / pow(2, st);"
+                                                                             "              b_n.x = c_n.x;"
+                                                                             "              b_n.y += a_n.y;"
+                                                                             "              c_n.x += w / pow(2.0, st + 1.0);"
+                                                                             "              c_n.y = a_n.y;"
+                                                                             "          }"
                                                                              "      }"
                                                                              "  }"
                                                                              "}");
@@ -616,6 +617,8 @@ void FractalWindowRenderer::initialization()
 
                                                                              "}");
         */
+
+
         m_program->bindAttributeLocation("vertices", 0);
         m_program->link();
     }
