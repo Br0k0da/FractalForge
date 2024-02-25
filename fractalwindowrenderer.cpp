@@ -660,27 +660,33 @@ void FractalWindowRenderer::initialization()
                                                                              "      for(int st = 1; st < iter_serp; ++st){"
                                                                              "          a_n.x = a_base.x + w / pow(3.0, float(st));"
                                                                              "          a_n.y = a_base.y + h / pow(3.0, float(st));"
-                                                                             "          b_n.x = b_base.x + w / pow(3.0, float(st));"
-                                                                             "          b_n.y = b_base.y - h / pow(3.0, float(st));"
-                                                                             "          c_n.x = c_base.x - w / pow(3.0, float(st));"
-                                                                             "          c_n.y = c_base.y - h / pow(3.0, float(st));"
-                                                                             "          d_n.x = d_base.x - w / pow(3.0, float(st));"
-                                                                             "          d_n.y = d_base.y + w / pow(3.0, float(st));"
+                                                                             "          b_n.x = a_n.x;"
+                                                                             "          b_n.y = a_n.y + h / pow(3.0, float(st));"
+                                                                             "          c_n.x = b_n.x + w / pow(3.0 , float(st));"
+                                                                             "          c_n.y = b_n.y;"
+                                                                             "          d_n.x = a_n.x + w / pow(3.0 , float(st));"
+                                                                             "          d_n.y = a_n.y;"
 
-                                                                             "          for(int i = 0; i < int(pow(2.0, float(st)) - 1.0); ++i){"
+                                                                             "          for(int i = 0; i < int(pow(3.0, float(st)) - 1.0); ++i){"
                                                                              "              a = a_n;"
                                                                              "              b = b_n;"
                                                                              "              c = c_n;"
                                                                              "              d = d_n;"
-                                                                             "              for(int j = i; j < int(pow(2.0, float(st)) - 1.0); ++j){"
+                                                                             "              for(int j = i; j < int(pow(3.0, float(st)) - 1.0); ++j){"
                                                                              "                  if(check(a, b, c, d, z)){"
                                                                              "                      gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);"
                                                                              "                      break;"
                                                                              "                  }"
+                                                                             "                  a.x += 3.0 * (w / pow(3.0, float(st)));"
+                                                                             "                  b.x += 3.0 * (w / pow(3.0, float(st)));"
+                                                                             "                  c.x += 3.0 * (w / pow(3.0, float(st)));"
+                                                                             "                  d.x += 3.0 * (w / pow(3.0, float(st)));"
 
                                                                              "              }"
-
-
+                                                                             "              a_n.y += 3.0 * (h / pow(3.0, float(st)));"
+                                                                             "              b_n.y += 3.0 * (h / pow(3.0, float(st)));"
+                                                                             "              c_n.y += 3.0 * (h / pow(3.0, float(st)));"
+                                                                             "              d_n.y += 3.0 * (h / pow(3.0, float(st)));"
                                                                              "          }"
                                                                              "      }"
 
@@ -730,7 +736,7 @@ void FractalWindowRenderer::paint()
     m_program->setUniformValue("b_base", QPointF(0.0, 0.7));
     m_program->setUniformValue("c_base", QPointF(0.8, -0.7));
     // Для Квадрата Серписнского
-    m_program->setUniformValue("iter_serp", 3);
+    m_program->setUniformValue("iter_serp", 6);
     m_program->setUniformValue("k", (float)1);
     m_program->setUniformValue("a_base", QPointF(-0.6, -0.6));
     m_program->setUniformValue("b_base", QPointF(-0.6, 0.6));
