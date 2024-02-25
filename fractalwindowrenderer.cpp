@@ -91,19 +91,19 @@ void FractalWindowRenderer::initialization()
                                                                              "}");
         */
         // Треугольники Серпинского
-        /*
+        ///*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
-                                                                             "uniform vec2 a_base;"
-                                                                             "uniform vec2 b_base;"
-                                                                             "uniform vec2 c_base;"
+                                                                             "uniform vec2 a_base_triangle;"
+                                                                             "uniform vec2 b_base_triangle;"
+                                                                             "uniform vec2 c_base_triangle;"
                                                                              "uniform float scale;"
-                                                                             "uniform float k;"
-                                                                             "uniform int iter_serp_t;"
+                                                                             "uniform float k_serp;"
+                                                                             "uniform int iter_serp_triangle;"
                                                                              "varying highp vec2 coords;"
 
 
                                                                              "bool check(vec2 a, vec2 b, vec2 c, vec2 z){"
-                                                                             "  float k_ab = -k, k_bc = k, b_ac, b_ab, b_bc;"
+                                                                             "  float k_ab = -k_serp, k_bc = k_serp, b_ac, b_ab, b_bc;"
                                                                              "  b_ac = c.y;"
                                                                              "  b_ab = a.y - k_ab * a.x;"
                                                                              "  b_bc = c.y - k_bc * c.x;"
@@ -118,22 +118,22 @@ void FractalWindowRenderer::initialization()
                                                                              "  z.x = 1.3333 * (coords.x) * scale - center.x;"
                                                                              "  z.y = (coords.y) * scale - center.y;"
 
-                                                                             "  float w = abs(c_base.x - a_base.x);"
+                                                                             "  float w = abs(c_base_triangle.x - a_base_triangle.x);"
                                                                              "  float h = w * cos(radians(30.0f));"
-                                                                             "  float k_ab = k, k_bc = -k, b_ac, b_ab, b_bc;"
+                                                                             "  float k_ab = k_serp, k_bc = -k_serp, b_ac, b_ab, b_bc;"
 
-                                                                             "  b_ac = c_base.y;"
-                                                                             "  b_ab = a_base.y - k_ab * a_base.x;"
-                                                                             "  b_bc = c_base.y - k_bc * c_base.x;"
+                                                                             "  b_ac = c_base_triangle.y;"
+                                                                             "  b_ab = a_base_triangle.y - k_ab * a_base_triangle.x;"
+                                                                             "  b_bc = c_base_triangle.y - k_bc * c_base_triangle.x;"
 
                                                                              "  if(k_ab * z.x + b_ab - z.y >= 0.0 && k_bc * z.x + b_bc - z.y >= 0.0 && b_ac - z.y <= 0.0){"
                                                                              "      gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
 
-                                                                             "      for(int st = 1; st < iter_serp_t; ++st){"
-                                                                             "          a_n.x = a_base.x + w / pow(2.0, float(st) + 1.0);"
-                                                                             "          a_n.y = a_base.y + h / pow(2.0, float(st));"
-                                                                             "          b_n.x = a_base.x + w / pow(2.0, float(st));"
-                                                                             "          b_n.y = a_base.y;"
+                                                                             "      for(int st = 1; st < iter_serp_triangle; ++st){"
+                                                                             "          a_n.x = a_base_triangle.x + w / pow(2.0, float(st) + 1.0);"
+                                                                             "          a_n.y = a_base_triangle.y + h / pow(2.0, float(st));"
+                                                                             "          b_n.x = a_base_triangle.x + w / pow(2.0, float(st));"
+                                                                             "          b_n.y = a_base_triangle.y;"
                                                                              "          c_n.x = a_n.x + w / pow(2.0, float(st));"
                                                                              "          c_n.y = a_n.y;"
 
@@ -165,232 +165,89 @@ void FractalWindowRenderer::initialization()
                                                                              "      gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
                                                                              "  }"
                                                                              "}");
-        */
-        // Снежинка Коха
+        //*/
+
+
+        // Ковёр Серпинского
+        /*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
-                                                                             "uniform vec2 a_base;"
-                                                                             "uniform vec2 b_base;"
-                                                                             "uniform vec2 c_base;"
+                                                                             "uniform vec2 a_base_square;"
+                                                                             "uniform vec2 b_base_square;"
+                                                                             "uniform vec2 c_base_square;"
+                                                                             "uniform vec2 d_base_square;"
                                                                              "uniform float scale;"
-                                                                             "uniform float k;"
-                                                                             "uniform int iter_koh;"
+                                                                             "uniform int iter_serp_square;"
                                                                              "varying highp vec2 coords;"
 
 
-                                                                             "bool check(vec2 a, vec2 b, vec2 c, vec2 z){"
-                                                                             "  float k_ab = k, k_bc = -k, b_ac, b_ab, b_bc;"
-                                                                             "  int znak = 1;"
-                                                                             "  if(b.y < a.y){"
-                                                                             "      znak = -1;"
-                                                                             "      k_ab = -k;"
-                                                                             "      k_bc = k;"
-                                                                             "  }"
-                                                                             "  b_ac = c.y;"
-                                                                             "  b_ab = a.y - k_ab * a.x;"
-                                                                             "  b_bc = c.y - k_bc * c.x;"
-                                                                             "  if(znak * (k_ab * z.x + b_ab - z.y) >= 0 && znak * (k_bc * z.x + b_bc - z.y) >= 0 && znak * (b_ac - z.y) <= 0)"
+                                                                             "bool check(vec2 a, vec2 b, vec2 c, vec2 d,vec2 z){"
+                                                                             "  float b_ad, b_ab, b_bc, b_cd;"
+                                                                             "  b_ad = a.y;"
+                                                                             "  b_ab = a.x;"
+                                                                             "  b_bc = b.y;"
+                                                                             "  b_cd = c.x;"
+                                                                             "  if(z.x - b_ab >= 0.0 && z.x - b_cd <= 0.0 && z.y - b_ad >= 0.0 && z.y - b_bc <= 0.0)"
                                                                              "      return true;"
                                                                              "  return false;"
                                                                              "}"
 
-
-
-
-                                                                             "vec2 l_a(vec2 a, int znak, float st, float w, float h){"
-                                                                             "  a.x = a.x;"
-                                                                             "  a.y = a.y + znak * (h / pow(3,st) + h / pow(3,st));"
-                                                                             "  return a;"
-                                                                             "}"
-
-
-                                                                             "vec2 l_b(vec2 a, int znak, float st, float w, float h){"
-                                                                             "  a.x = a.x + w / (2 * pow(3, st));"
-                                                                             "  a.y = a.y + znak * (h / pow(3, st));"
-                                                                             "  return a;"
-                                                                             "}"
-
-
-                                                                             "vec2 l_c(vec2 a, int znak, float st, float w, float h){"
-                                                                             "  a.x = a.x + w / pow(3,st);"
-                                                                             "  a.y = a.y + znak * (h / pow(3, st) + h / pow(3, st));"
-                                                                             "  return a;"
-                                                                             "}"
-
-
-
-                                                                             "vec2 c_a(vec2 a, int znak, float st, float w, float h){"
-                                                                             "  a.x = a.x + w / pow(3, st);"
-                                                                             "  a.y = a.y;"
-                                                                             "  return a;"
-                                                                             "}"
-
-
-                                                                             "vec2 c_b(vec2 a, int znak, float st, float w, float h){"
-                                                                             "  a.x = a.x + w / (2 * pow(3, st - 0.1));"
-                                                                             "  a.y = a.y - znak * (h / pow(3, st));"
-                                                                             "  return a;"
-                                                                             "}"
-
-
-                                                                             "vec2 c_c(vec2 a, int znak, float st, float w, float h){"
-                                                                             "  a.x = a.x + w / pow(3, st) + w / pow(3, st);"
-                                                                             "  a.y = a.y;"
-                                                                             "  return a;"
-                                                                             "}"
-
-
-
-                                                                             "vec2 r_a(vec2 c, int znak, float st, float w, float h){"
-                                                                             "  c.x = c.x - w / pow(3, st);"
-                                                                             "  c.y = c.y + znak * (h / pow(3, st) + h / pow(3, st));"
-                                                                             "  return c;"
-                                                                             "}"
-
-
-                                                                             "vec2 r_b(vec2 c, int znak, float st, float w, float h){"
-                                                                             "  c.x = c.x - w / (2 * pow(3, st));"
-                                                                             "  c.y = c.y + znak * (h / pow(3, st));"
-                                                                             "  return c;"
-                                                                             "}"
-
-
-                                                                             "vec2 r_c(vec2 c, int znak, float st, float w, float h){"
-                                                                             "  c.x = c.x;"
-                                                                             "  c.y = c.y + znak * (h / pow(3, st) + h / pow(3, st));"
-                                                                             "  return c;"
-                                                                             "}"
-
-
-                                                                             "bool up(vec2 a, vec2 b, vec2 c, vec2 z, int iter, int x);"
-                                                                             "bool down(vec2 a, vec2 b, vec2 c, vec2 z, int iter);"
-
-                                                                             "bool NOT_RECURSION(vec2 a, vec2 b, vec2 c, vec2 z, int iter, bool what){"
-                                                                             "  if(what){"
-                                                                             "      return up(a,b,c,z,iter, 1);"
-                                                                             "  }"
-                                                                             "  return down(a,b,c,z,iter);"
-                                                                             "}"
-
-                                                                             "bool up(vec2 a, vec2 b, vec2 c, vec2 z, int iter, int x){"
-                                                                             "  if (iter >= iter_koh){"
-                                                                             "      if (check(a,b,c,z))"
-                                                                             "          return true;"
-                                                                             "      vec2 a_n, b_n, c_n, a_const, c_const;"
-                                                                             "      float w = abs(c.x - a.x);"
-                                                                             "      float h = w * cos(radians(30.0f));"
-                                                                             "      int znak = 1;"
-                                                                             "      for(int st = 1; st < iter_koh - iter; ++st){"
-                                                                             "          a_const = a;"
-                                                                             "          for(int j = 0; j < pow(3, st - 1); ++j){"
-                                                                             "              a_n = l_a(a_const, znak, st, w, h);"
-                                                                             "              b_n = l_b(a_const, znak, st, w, h);"
-                                                                             "              c_n = l_c(a_const, znak, st, w, h);"
-                                                                             "              if (NOT_RECURSION(a_n, b_n, c_n, z, iter + 1,false))"
-                                                                             "                  return true;"
-                                                                             "              a_const.x = a_const.x + w / (2 * pow(3, st - 1.0));"
-                                                                             "              a_const.y = a_const.y + znak * (h / pow(3, st - 1.0));"
-                                                                             "          }"
-
-
-                                                                             "          a_const = a;"
-                                                                             "          for(int j = 0; j < pow(3, st - 1); ++j){"
-                                                                             "              a_n = c_a(a_const, znak, st, w, h);"
-                                                                             "              b_n = c_b(a_const, znak, st, w, h);"
-                                                                             "              c_n = c_c(a_const, znak, st, w, h);"
-                                                                             "              if (NOT_RECURSION(a_n, b_n, c_n, z, iter + 1,false))"
-                                                                             "                  return true;"
-                                                                             "              a_const.x = a_const.x + w / pow(3, st - 1.0);"
-                                                                             "          }"
-
-
-                                                                             "          c_const = c;"
-                                                                             "          for(int j = 0; j < pow(3, st - 1); ++j){"
-                                                                             "              a_n = r_a(c_const, znak, st, w, h);"
-                                                                             "              b_n = r_b(c_const, znak, st, w, h);"
-                                                                             "              c_n = r_c(c_const, znak, st, w, h);"
-                                                                             "              if (NOT_RECURSION(a_n, b_n, c_n, z, iter + 1,false))"
-                                                                             "                  return true;"
-                                                                             "              c_const.x = c_const.x - w / (2 * pow(3, st - 1));"
-                                                                             "              c_const.y = c_const.y + znak * (h / pow(3, st - 1));"
-                                                                             "          }"
-                                                                             "      }"
-                                                                             "  }"
-                                                                             "  return false;"
-                                                                             "}"
-
-
-
-                                                                             "bool down(vec2 a, vec2 b, vec2 c, vec2 z, int iter){"
-                                                                             "  if (iter >= iter_koh){"
-                                                                             "      if (check(a,b,c,z))"
-                                                                             "          return true;"
-                                                                             "      vec2 a_n, b_n, c_n, a_const, c_const;"
-                                                                             "      float w = abs(c.x - a.x);"
-                                                                             "      float h = w * cos(radians(30.0f));"
-                                                                             "      int znak = -1;"
-                                                                             "      for(int st = 1; st < iter_koh - iter; ++st){"
-                                                                             "          a_const = a;"
-                                                                             "          for(int j = 0; j < pow(3, st - 1); ++j){"
-                                                                             "              a_n = l_a(a_const, znak, st, w, h);"
-                                                                             "              b_n = l_b(a_const, znak, st, w, h);"
-                                                                             "              c_n = l_c(a_const, znak, st, w, h);"
-                                                                             "              if (NOT_RECURSION(a_n, b_n, c_n, z, iter + 1,true))"
-                                                                             "                  return true;"
-                                                                             "              a_const.x = a_const.x + w / (2 * pow(3, st - 1.0));"
-                                                                             "              a_const.y = a_const.y + znak * (h / pow(3, st - 1.0));"
-                                                                             "          }"
-
-
-                                                                             "          a_const = a;"
-                                                                             "          for(int j = 0; j < pow(3, st - 1); ++j){"
-                                                                             "              a_n = c_a(a_const, znak, st, w, h);"
-                                                                             "              b_n = c_b(a_const, znak, st, w, h);"
-                                                                             "              c_n = c_c(a_const, znak, st, w, h);"
-                                                                             "              if (NOT_RECURSION(a_n, b_n, c_n, z, iter + 1,true))"
-                                                                             "                  return true;"
-                                                                             "              a_const.x = a_const.x + w / pow(3, st - 1.0);"
-                                                                             "          }"
-
-
-                                                                             "          c_const = c;"
-                                                                             "          for(int j = 0; j < pow(3, st - 1); ++j){"
-                                                                             "              a_n = r_a(c_const, znak, st, w, h);"
-                                                                             "              b_n = r_b(c_const, znak, st, w, h);"
-                                                                             "              c_n = r_c(c_const, znak, st, w, h);"
-                                                                             "              if (NOT_RECURSION(a_n, b_n, c_n, z, iter + 1,true))"
-                                                                             "                  return true;"
-                                                                             "              c_const.x = c_const.x - w / (2 * pow(3, st - 1));"
-                                                                             "              c_const.y = c_const.y + znak * (h / pow(3, st - 1));"
-                                                                             "          }"
-                                                                             "      }"
-                                                                             "  }"
-                                                                             "  return false;"
-                                                                             "}"
-
-
-
-
                                                                              "void main() {"
-                                                                             "  vec2 z;"
-                                                                             //"  bool found = false;"
+                                                                             "  vec2 z, a, b, c, d, a_n, b_n, c_n, d_n;"
+
                                                                              "  z.x = 1.3333 * (coords.x) * scale - center.x;"
-                                                                             "  z.y = (coords.y - 0.22) * scale - center.y;"
+                                                                             "  z.y = (coords.y) * scale - center.y;"
 
-                                                                             "  if(check(a_base, b_base, c_base, z)){"
+                                                                             "  float w = abs(a_base_square.x) + abs(d_base_square.x);"
+                                                                             "  float h = abs(a_base_square.y) + abs(b_base_square.y);"
+                                                                             "  float b_ad, b_ab, b_bc, b_cd;"
+
+                                                                             "  b_ad = a_base_square.y;"
+                                                                             "  b_ab = a_base_square.x;"
+                                                                             "  b_bc = b_base_square.y;"
+                                                                             "  b_cd = c_base_square.x;"
+
+                                                                             "  if(z.x - b_ab >= 0.0 && z.x - b_cd <= 0.0 && z.y - b_ad >= 0.0 && z.y - b_bc <= 0.0){"
                                                                              "      gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
-                                                                             //"      found = true;"
+                                                                             "      for(int st = 1; st < iter_serp_square; ++st){"
+                                                                             "          a_n.x = a_base_square.x + w / pow(3.0, float(st));"
+                                                                             "          a_n.y = a_base_square.y + h / pow(3.0, float(st));"
+                                                                             "          b_n.x = a_n.x;"
+                                                                             "          b_n.y = a_n.y + h / pow(3.0, float(st));"
+                                                                             "          c_n.x = b_n.x + w / pow(3.0 , float(st));"
+                                                                             "          c_n.y = b_n.y;"
+                                                                             "          d_n.x = a_n.x + w / pow(3.0 , float(st));"
+                                                                             "          d_n.y = a_n.y;"
+
+                                                                             "          for(int i = 0; i < int(pow(3.0, float(st)) - 1.0); ++i){"
+                                                                             "              a = a_n;"
+                                                                             "              b = b_n;"
+                                                                             "              c = c_n;"
+                                                                             "              d = d_n;"
+                                                                             "              for(int j = i; j < int(pow(3.0, float(st)) - 1.0); ++j){"
+                                                                             "                  if(check(a, b, c, d, z)){"
+                                                                             "                      gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);"
+                                                                             "                      break;"
+                                                                             "                  }"
+                                                                             "                  a.x += 3.0 * (w / pow(3.0, float(st)));"
+                                                                             "                  b.x += 3.0 * (w / pow(3.0, float(st)));"
+                                                                             "                  c.x += 3.0 * (w / pow(3.0, float(st)));"
+                                                                             "                  d.x += 3.0 * (w / pow(3.0, float(st)));"
+
+                                                                             "              }"
+                                                                             "              a_n.y += 3.0 * (h / pow(3.0, float(st)));"
+                                                                             "              b_n.y += 3.0 * (h / pow(3.0, float(st)));"
+                                                                             "              c_n.y += 3.0 * (h / pow(3.0, float(st)));"
+                                                                             "              d_n.y += 3.0 * (h / pow(3.0, float(st)));"
+                                                                             "          }"
+                                                                             "      }"
+
                                                                              "  }"
-
-                                                                             //"  if(!found && down(a_base, b_base, c_base, z, 1)){"
-                                                                             "      gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
-                                                                             //"      found = true;"
-                                                                             //"  }"
-
-                                                                             //"  if(!found){"
-                                                                             "      gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);"
-                                                                            // "  }"
-
+                                                                             "  else{"
+                                                                             "      gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
+                                                                             "  }"
                                                                              "}");
+        */
+        // Снежинка Коха (доработка)
         /*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform vec2 a_base;"
@@ -839,82 +696,6 @@ void FractalWindowRenderer::initialization()
 
                                                                              "}");
         */
-
-
-        // Ковёр Серпинского
-        /*
-        m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
-                                                                             "uniform vec2 a_base;"
-                                                                             "uniform vec2 b_base;"
-                                                                             "uniform vec2 c_base;"
-                                                                             "uniform vec2 d_base;"
-                                                                             "uniform float scale;"
-                                                                             "uniform float k;"
-                                                                             "uniform int iter_serp_q;"
-                                                                             "varying highp vec2 coords;"
-
-
-                                                                             "bool check(vec2 a, vec2 b, vec2 c, vec2 d,vec2 z){"
-                                                                             "  float k_ab = k, k_cd = -k, b_ad, b_ab, b_bc, b_cd;"
-                                                                             "  b_ad = a.y;"
-                                                                             "  b_ab = a.x;"
-                                                                             "  b_bc = b.y;"
-                                                                             "  b_cd = c.x;"
-                                                                             "  if(z.x - b_ab >= 0.0 && z.x - b_cd <= 0.0 && z.y - b_ad >= 0.0 && z.y - b_bc <= 0.0)"
-                                                                             "      return true;"
-                                                                             "  return false;"
-                                                                             "}"
-
-                                                                             "void main() {"
-                                                                             "  vec2 z, a, b, c, d, a_n, b_n, c_n, d_n;"
-
-                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x;"
-                                                                             "  z.y = (coords.y) * scale - center.y;"
-
-                                                                             "  float w = abs(a_base.x) + abs(d_base.x);"
-                                                                             "  float h = abs(a_base.y) + abs(b_base.y);"
-                                                                             "  float k_ab = k, k_cd = -k, b_ad, b_ab, b_bc, b_cd;"
-
-                                                                             "  b_ad = a_base.y;"
-                                                                             "  b_ab = a_base.x;"
-                                                                             "  b_bc = b_base.y;"
-                                                                             "  b_cd = c_base.x;"
-
-                                                                             "  if(z.x - b_ab >= 0.0 && z.x - b_cd <= 0.0 && z.y - b_ad >= 0.0 && z.y - b_bc <= 0.0){"
-                                                                             "      gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
-                                                                             "      for(int st = 1; st < iter_serp_q; ++st){"
-                                                                             "          a_n.x = a_base.x + w / pow(3.0, float(st));"
-                                                                             "          a_n.y = a_base.y + h / pow(3.0, float(st));"
-                                                                             "          b_n.x = b_base.x + w / pow(3.0, float(st));"
-                                                                             "          b_n.y = b_base.y - h / pow(3.0, float(st));"
-                                                                             "          c_n.x = c_base.x - w / pow(3.0, float(st));"
-                                                                             "          c_n.y = c_base.y - h / pow(3.0, float(st));"
-                                                                             "          d_n.x = d_base.x - w / pow(3.0, float(st));"
-                                                                             "          d_n.y = d_base.y + w / pow(3.0, float(st));"
-
-                                                                             "          for(int i = 0; i < int(pow(2.0, float(st)) - 1.0); ++i){"
-                                                                             "              a = a_n;"
-                                                                             "              b = b_n;"
-                                                                             "              c = c_n;"
-                                                                             "              d = d_n;"
-                                                                             "              for(int j = i; j < int(pow(2.0, float(st)) - 1.0); ++j){"
-                                                                             "                  if(check(a, b, c, d, z)){"
-                                                                             "                      gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);"
-                                                                             "                      break;"
-                                                                             "                  }"
-
-                                                                             "              }"
-
-
-                                                                             "          }"
-                                                                             "      }"
-
-                                                                             "  }"
-                                                                             "  else{"
-                                                                             "      gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
-                                                                             "  }"
-                                                                             "}");
-        */
         m_program->bindAttributeLocation("vertices", 0);
         m_program->link();
 
@@ -948,21 +729,25 @@ void FractalWindowRenderer::paint()
     // Для Жюлье
     m_program->setUniformValue("iter_gulie", 40);
     m_program->setUniformValue("a_gulie", (float)0.5);
-    // Для Снежинка Коха
-    m_program->setUniformValue("iter_koh", 1);
     // Для Треугольника Серписнского
-    m_program->setUniformValue("iter_serp_t", 5);
-    m_program->setUniformValue("k", (float)1.75);
-    m_program->setUniformValue("a_base", QPointF(-0.8, -0.7));
-    m_program->setUniformValue("b_base", QPointF(0.0, 0.7));
-    m_program->setUniformValue("c_base", QPointF(0.8, -0.7));
-    // Для Квадрата Серписнского
-    m_program->setUniformValue("iter_serp_q", 3);
-    //m_program->setUniformValue("k", (float)1);
-    //m_program->setUniformValue("a_base", QPointF(-0.6, -0.6));
-    //m_program->setUniformValue("b_base", QPointF(-0.6, 0.6));
-    //m_program->setUniformValue("c_base", QPointF(0.6, 0.6));
-    //m_program->setUniformValue("d_base", QPointF(0.6, -0.6));
+    m_program->setUniformValue("iter_serp_triangle", 5);
+    m_program->setUniformValue("k_serp", (float)1.75);
+    m_program->setUniformValue("a_base_triangle", QPointF(-0.8, -0.7));
+    m_program->setUniformValue("b_base_triangle", QPointF(0.0, 0.7));
+    m_program->setUniformValue("c_base_triangle", QPointF(0.8, -0.7));
+    // Для Ковра Серписнского
+    m_program->setUniformValue("iter_serp_square", 5);
+    m_program->setUniformValue("a_base_square", QPointF(-0.6, -0.6));
+    m_program->setUniformValue("b_base_square", QPointF(-0.6, 0.6));
+    m_program->setUniformValue("c_base_square", QPointF(0.6, 0.6));
+    m_program->setUniformValue("d_base_square", QPointF(0.6, -0.6));
+    // Для Снежинки Коха (На доработку)
+    m_program->setUniformValue("iter_koh", 5);
+    m_program->setUniformValue("k_koh", (float)1.75);
+    m_program->setUniformValue("a_base_koh", QPointF(-0.8, -0.7));
+    m_program->setUniformValue("b_base_koh", QPointF(0.0, 0.7));
+    m_program->setUniformValue("c_base_koh", QPointF(0.8, -0.7));
+
 
 
     glViewport(m_viewportSize.width() * 0.333, m_viewportSize.height() * 0.01, m_viewportSize.width() * 0.663, m_viewportSize.height() * 0.98);
