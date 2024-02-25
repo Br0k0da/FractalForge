@@ -3,15 +3,16 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Window
 import Prototype
+import fractalforge.ButtonController
 
 Window {
   id: root
   title: qsTr("FractalForge")
 
   width: 1400
-  minimumWidth: 1000
+  minimumWidth: 1400
   height: 710
-  minimumHeight: 500
+  minimumHeight: 710
 
   visible: true
   color: "#424242"
@@ -109,7 +110,9 @@ Window {
             colorMouse: "#92938C"
             colorFont: "#EDECDF"
 
-            onClicked: console.log("Кнопка 1 сработала!")
+            onClicked: {
+
+            }
           }
 
           CustomButton {
@@ -127,7 +130,9 @@ Window {
             colorMouse: "#B59685"
             colorFont: "#EDECDF"
 
-            onClicked: console.log("Кнопка 2 сработала!")
+            onClicked: {
+
+            }
           }
 
           CustomButton {
@@ -145,7 +150,10 @@ Window {
             colorMouse: "#858585"
             colorFont: "#EDECDF"
 
-            onClicked: console.log("Кнопка 3 сработала!")
+            onClicked: {
+              ButtonController.fractalType = 0
+              console.log(ButtonController.fractalType)
+            }
           }
 
           CustomButton {
@@ -163,7 +171,10 @@ Window {
             colorMouse: "#858585"
             colorFont: "#EDECDF"
 
-            onClicked: console.log("Кнопка 4 сработала!")
+            onClicked: {
+              ButtonController.fractalType = 1
+              console.log(ButtonController.fractalType)
+            }
           }
         }
       }
@@ -194,25 +205,9 @@ Window {
           radius: 5
           color: "black"
 
-
-          FractalWindow {
-            Component.onCompleted: {
-                xCoord: display.mapToItem(root.parent, 0, 0).x
-                yCoord: display.mapToItem(root.parent, 0, 0).y
-                zCoord: 0.0
-            }
-
-            xCoord: 0
-            yCoord: 0
-            zCoord: 0
-          }
+          FractalWindow {}
         }
       }
     }
   }
-
-    Component.onCompleted: {
-        var globalCoordinares = display.mapToItem(root.parent, 0, 0)
-        console.log("X: " + globalCoordinares.x + " y: " + globalCoordinares.y)
-    }
 }

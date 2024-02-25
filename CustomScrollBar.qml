@@ -97,7 +97,6 @@ Item {
 
           onClicked: {
             scrollAria.currentIndex = index
-            console.log(`${scrollModel.get(index).name} используется!`)
             root.clicked()
           }
         }
