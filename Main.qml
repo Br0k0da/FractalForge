@@ -9,10 +9,10 @@ Window {
   id: root
   title: qsTr("FractalForge")
 
-  width: 1024
-  minimumWidth: 512
-  height: 768
-  minimumHeight: 384
+  width: 1400
+  minimumWidth: 1400
+  height: 710
+  minimumHeight: 710
 
   visible: true
   color: "#424242"
