@@ -26,19 +26,23 @@ Item {
       model: ListModel {
         id: scrollModel
         ListElement {
-          name: "Снежинка Коха"
+          name: "Множество Мальдерброта"
           someImage: "assets/images/1.jpg"
+        }
+        ListElement {
+          name: "Множество Жюлиа"
+          someImage: "assets/images/5.jpg"
         }
         ListElement {
           name: "Треугольник Серписнокого"
           someImage: "assets/images/2.jpg"
         }
         ListElement {
-          name: "Фракталы Пьера Фату"
+          name: "Ковёр Серписнокого"
           someImage: "assets/images/3.jpg"
         }
         ListElement {
-          name: "Множество Мальдерброта"
+          name: "Снежинка Коха"
           someImage: "assets/images/4.jpg"
         }
         ListElement {

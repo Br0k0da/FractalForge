@@ -49,7 +49,7 @@ void FractalWindowRenderer::initialization()
                                                                              "  }"
 
                                                                              "if(i == iter)"
-                                                                             "  gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
+                                                                             "  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"
                                                                              "else"
                                                                              "    gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
                                                                              "}");
@@ -85,7 +85,7 @@ void FractalWindowRenderer::initialization()
                                                                              "  }"
 
                                                                              "if(i == iter_gulie)"
-                                                                             "    gl_FragColor = vec4(144.0, 144.0, 144.0, 255.0);"
+                                                                             "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"
                                                                              "else"
                                                                              "    gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
                                                                              "}");
@@ -127,7 +127,7 @@ void FractalWindowRenderer::initialization()
                                                                              "  b_bc = c_base_triangle.y - k_bc * c_base_triangle.x;"
 
                                                                              "  if(k_ab * z.x + b_ab - z.y >= 0.0 && k_bc * z.x + b_bc - z.y >= 0.0 && b_ac - z.y <= 0.0){"
-                                                                             "      gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
+                                                                             "      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"
 
                                                                              "      for(int st = 1; st < iter_serp_triangle; ++st){"
                                                                              "          a_n.x = a_base_triangle.x + w / pow(2.0, float(st) + 1.0);"
@@ -207,7 +207,7 @@ void FractalWindowRenderer::initialization()
                                                                              "  b_cd = c_base_square.x;"
 
                                                                              "  if(z.x - b_ab >= 0.0 && z.x - b_cd <= 0.0 && z.y - b_ad >= 0.0 && z.y - b_bc <= 0.0){"
-                                                                             "      gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
+                                                                             "      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"
                                                                              "      for(int st = 1; st < iter_serp_square; ++st){"
                                                                              "          a_n.x = a_base_square.x + w / pow(3.0, float(st));"
                                                                              "          a_n.y = a_base_square.y + h / pow(3.0, float(st));"
@@ -714,9 +714,9 @@ void FractalWindowRenderer::paint()
 
     float values[] = {
         -1, -1,
-        1, -1,
-        -1, 1,
-        1, 1
+        1,  -1,
+        -1,  1,
+        1,   1
     };
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -728,9 +728,9 @@ void FractalWindowRenderer::paint()
     m_program->setUniformValue("iter", 1000);
     // Для Жюлье
     m_program->setUniformValue("iter_gulie", 40);
-    m_program->setUniformValue("a_gulie", (float)0.5);
+    m_program->setUniformValue("a_gulie", (float)0.53);
     // Для Треугольника Серписнского
-    m_program->setUniformValue("iter_serp_triangle", 5);
+    m_program->setUniformValue("iter_serp_triangle", 7);
     m_program->setUniformValue("k_serp", (float)1.75);
     m_program->setUniformValue("a_base_triangle", QPointF(-0.8, -0.7));
     m_program->setUniformValue("b_base_triangle", QPointF(0.0, 0.7));
