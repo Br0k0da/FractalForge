@@ -1,5 +1,44 @@
 #include "fractalwindowrenderer.h"
+#include <QDebug>
 
+float FractalWindowRenderer::fScale() const
+{
+    return m_fScale;
+}
+
+void FractalWindowRenderer::setFScale(float newFScale)
+{
+    // qInfo() << "Try set scale:" << newFScale;
+    if (qFuzzyCompare(m_fScale, newFScale))
+        return;
+    m_fScale = newFScale;
+
+    // qInfo() << "Set new scale:" << newFScale << "|" << m_fScale;
+}
+
+float FractalWindowRenderer::yOffset() const
+{
+    return m_yOffset;
+}
+
+void FractalWindowRenderer::setYOffset(float newYOffset)
+{
+    if (qFuzzyCompare(m_yOffset, newYOffset))
+        return;
+    m_yOffset = newYOffset;
+}
+
+float FractalWindowRenderer::xOffset() const
+{
+    return m_xOffset;
+}
+
+void FractalWindowRenderer::setXOffset(float newXOffset)
+{
+    if (qFuzzyCompare(m_xOffset, newXOffset))
+        return;
+    m_xOffset = newXOffset;
+}
 
 FractalWindowRenderer::~FractalWindowRenderer()
 {
@@ -23,16 +62,17 @@ void FractalWindowRenderer::initialization()
                                                     "    coords = vertices.xy;"
                                                     "}");
         //Фрактал Мандельброта
-        /*
+        ///*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
                                                                              "uniform int iter;"
                                                                              "varying highp vec2 coords;"
+                                                                             "uniform vec2 offset;"
 
                                                                              "void main() {"
                                                                              "  vec2 z, c;"
-                                                                             "  c.x = 1.3333 * (coords.x - 0.5) * scale - center.x;"
-                                                                             "  c.y = (coords.y) * scale - center.y;"
+                                                                             "  c.x = 1.3333 * (coords.x - 0.5) * scale - center.x - offset.x;"
+                                                                             "  c.y = (coords.y) * scale - center.y + offset.y;"
                                                                              "  z.x = 0.0;"
                                                                              "  z.y = 0.0;"
 
@@ -53,7 +93,7 @@ void FractalWindowRenderer::initialization()
                                                                              "else"
                                                                              "    gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
                                                                              "}");
-        */
+        //*/
 
         // Фрактал Жюлье
         /*
@@ -91,7 +131,7 @@ void FractalWindowRenderer::initialization()
                                                                              "}");
         */
         // Треугольники Серпинского
-        ///*
+        /*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform vec2 a_base_triangle;"
                                                                              "uniform vec2 b_base_triangle;"
@@ -165,7 +205,7 @@ void FractalWindowRenderer::initialization()
                                                                              "      gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
                                                                              "  }"
                                                                              "}");
-        //*/
+        */
 
 
         // Ковёр Серпинского
@@ -723,9 +763,10 @@ void FractalWindowRenderer::paint()
 
     //Общие переменные
     m_program->setAttributeArray(0, GL_FLOAT, values, 2);
-    m_program->setUniformValue("scale", (float)1);
+    m_program->setUniformValue("scale", (float)m_fScale);
     m_program->setUniformValue("center", QPointF(0.0, 0.0));
-    m_program->setUniformValue("iter", 1000);
+    m_program->setUniformValue("offset", QPointF(m_xOffset, m_yOffset));
+    m_program->setUniformValue("iter", 512);
     // Для Жюлье
     m_program->setUniformValue("iter_gulie", 40);
     m_program->setUniformValue("a_gulie", (float)0.53);

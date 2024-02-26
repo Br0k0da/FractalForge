@@ -6,7 +6,7 @@
 #include <QOpenGLContext>
 #include <QRunnable>
 
-#include <iostream>
+// #include <QDebug>
 
 class CleanupJob : public QRunnable
 {
@@ -36,6 +36,14 @@ void FractalWindow::sync()
     }
 
     m_renderer->setViewportSize(window()->size() * window()->devicePixelRatio());
+
+    // Установка значений изменяемых переменных из-под QML
+    m_renderer->setFScale(m_fScale);
+    m_renderer->setXOffset(m_xOffset);
+    m_renderer->setYOffset(m_yOffset);
+
+    // qInfo() << "m_fScale" << m_fScale;
+
     m_renderer->setWindow(window());
 }
 
@@ -74,8 +82,41 @@ void FractalWindow::setWindowElement(QQuickWindow *newWindowElement)
     emit windowElementChanged();
 }
 
+float FractalWindow::fScale() const
+{
+    return m_fScale;
+}
 
+void FractalWindow::setFScale(float newFScale)
+{
+    if (qFuzzyCompare(m_fScale, newFScale))
+        return;
+    m_fScale = newFScale;
+    emit fScaleChanged();
+}
 
+float FractalWindow::yOffset() const
+{
+    return m_yOffset;
+}
 
+void FractalWindow::setYOffset(float newYOffset)
+{
+    if (qFuzzyCompare(m_yOffset, newYOffset))
+        return;
+    m_yOffset = newYOffset;
+    emit yOffsetChanged();
+}
 
+float FractalWindow::xOffset() const
+{
+    return m_xOffset;
+}
 
+void FractalWindow::setXOffset(float newXOffset)
+{
+    if (qFuzzyCompare(m_xOffset, newXOffset))
+        return;
+    m_xOffset = newXOffset;
+    emit xOffsetChanged();
+}
