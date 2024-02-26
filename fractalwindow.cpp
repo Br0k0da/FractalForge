@@ -39,8 +39,11 @@ void FractalWindow::sync()
 
     // Установка значений изменяемых переменных из-под QML
     m_renderer->setFScale(m_fScale);
+    m_renderer->setFAGulie(m_fAGulie);
     m_renderer->setXOffset(m_xOffset);
     m_renderer->setYOffset(m_yOffset);
+
+
 
     // qInfo() << "m_fScale" << m_fScale;
 
@@ -93,6 +96,19 @@ void FractalWindow::setFScale(float newFScale)
         return;
     m_fScale = newFScale;
     emit fScaleChanged();
+}
+
+float FractalWindow::fAGulie() const
+{
+    return m_fAGulie;
+}
+
+void FractalWindow::setFAGulie(float newFAGulie)
+{
+    if (qFuzzyCompare(m_fAGulie, newFAGulie))
+        return;
+    m_fAGulie = newFAGulie;
+    emit fAGulieChanged();
 }
 
 float FractalWindow::yOffset() const
