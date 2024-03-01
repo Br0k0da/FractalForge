@@ -76,7 +76,7 @@ FractalWindowRenderer::~FractalWindowRenderer()
 void FractalWindowRenderer::initialization()
 {
     if (!m_program) {
-        qInfo() << fractalType << "fractalType";
+        // qInfo() << fractalType << "fractalType";
 
         QSGRendererInterface *rif = m_window->rendererInterface();
         Q_ASSERT(rif->graphicsApi() == QSGRendererInterface::OpenGL);
@@ -807,7 +807,7 @@ void FractalWindowRenderer::paint()
         m_program->setUniformValue("iter", 512);
         // Для Жюлье
         m_program->setUniformValue("iter_gulie", 40);
-        m_program->setUniformValue("a_gulie", (float)0.53);
+        m_program->setUniformValue("a_gulie", (float)m_fAGulie);
         // Для Треугольника Серписнского
         m_program->setUniformValue("iter_serp_triangle", 7);
         m_program->setUniformValue("k_serp", (float)1.75);

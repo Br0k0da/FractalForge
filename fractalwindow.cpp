@@ -154,6 +154,12 @@ void FractalWindow::setFractalType(int newFractalType)
     if(m_renderer)
     {
         m_renderer->fractalType = m_fractalType;
+
+        setFAGulie(1.0);
+        setFScale(1.0);
+        setXOffset(0.0);
+        setYOffset(0.0);
+
         m_renderer->resetProgram();
     }
 

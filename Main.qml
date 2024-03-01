@@ -261,6 +261,8 @@ Window {
                        if (wheel.angleDelta.y < 0) {
                          fractalWindow.fScale *= 1.05
                          fractalWindow.fAGulie *= 1.013
+
+                         console.log(fractalWindow.fAGulie)
                          display.update()
                        } else {
                          fractalWindow.fScale *= 0.95
