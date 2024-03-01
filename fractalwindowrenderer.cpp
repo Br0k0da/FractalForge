@@ -16,6 +16,21 @@ void FractalWindowRenderer::setFScale(float newFScale)
     // qInfo() << "Set new scale:" << newFScale << "|" << m_fScale;
 }
 
+float FractalWindowRenderer::fAGulie() const
+{
+    return m_fAGulie;
+}
+
+void FractalWindowRenderer::setFAGulie(float newFAGulie)
+{
+    // qInfo() << "Try set scale:" << newFScale;
+    if (qFuzzyCompare(m_fAGulie, newFAGulie))
+        return;
+    m_fAGulie = newFAGulie;
+
+    // qInfo() << "Set new scale:" << newFScale << "|" << m_fScale;
+}
+
 float FractalWindowRenderer::yOffset() const
 {
     return m_yOffset;
@@ -106,7 +121,7 @@ void FractalWindowRenderer::initialization()
                                                                              "  }"
 
                                                                              "if(i == iter)"
-                                                                             "  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"
+                                                                             "  gl_FragColor = vec4(0.5, 0.9, 0.5, 1.0);"
                                                                              "else"
                                                                              "    gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
                                                                              "}");
@@ -120,6 +135,7 @@ void FractalWindowRenderer::initialization()
                                                                              "uniform float a_gulie;"
                                                                              "uniform int iter_gulie;"
                                                                              "varying highp vec2 coords;"
+                                                                             "uniform vec2 offset;"
 
                                                                              "void main() {"
                                                                              "  vec2 c, z;"
@@ -127,8 +143,8 @@ void FractalWindowRenderer::initialization()
                                                                              "  float Pi = 3.14159265358979323846;"
                                                                              "  c.x = r * cos(Pi * a_gulie);"
                                                                              "  c.y = r * sin(Pi * a_gulie);"
-                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x;"
-                                                                             "  z.y = (coords.y) * scale - center.y;"
+                                                                             "  z.x = 1.3333 * (coords.x) * 1.0 - center.x - offset.x;"
+                                                                             "  z.y = (coords.y) * 1.0 - center.y + offset.y;"
 
                                                                              "  int i = 0;"
                                                                              "  float x = z.x;"
@@ -143,9 +159,9 @@ void FractalWindowRenderer::initialization()
                                                                              "  }"
 
                                                                              "if(i == iter_gulie)"
-                                                                             "    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"
+                                                                             "    gl_FragColor = vec4(0.5, 0.9, 0.5, 1.0);"
                                                                              "else"
-                                                                             "    gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
+                                                                             "    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);"
                                                                              "}");
         // Треугольники Серпинского
         /*
@@ -157,6 +173,7 @@ void FractalWindowRenderer::initialization()
                                                                              "uniform float k_serp;"
                                                                              "uniform int iter_serp_triangle;"
                                                                              "varying highp vec2 coords;"
+                                                                             "uniform vec2 offset;"
 
 
                                                                              "bool check(vec2 a, vec2 b, vec2 c, vec2 z){"
@@ -172,8 +189,8 @@ void FractalWindowRenderer::initialization()
                                                                              "void main() {"
                                                                              "  vec2 z, a, b, c, a_n, b_n, c_n;"
 
-                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x;"
-                                                                             "  z.y = (coords.y) * scale - center.y;"
+                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x - offset.x;"
+                                                                             "  z.y = (coords.y) * scale - center.y + offset.y;"
 
                                                                              "  float w = abs(c_base_triangle.x - a_base_triangle.x);"
                                                                              "  float h = w * cos(radians(30.0f));"
@@ -184,7 +201,7 @@ void FractalWindowRenderer::initialization()
                                                                              "  b_bc = c_base_triangle.y - k_bc * c_base_triangle.x;"
 
                                                                              "  if(k_ab * z.x + b_ab - z.y >= 0.0 && k_bc * z.x + b_bc - z.y >= 0.0 && b_ac - z.y <= 0.0){"
-                                                                             "      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"
+                                                                             "      gl_FragColor = vec4(0.5, 0.9, 0.5, 1.0);"
 
                                                                              "      for(int st = 1; st < iter_serp_triangle; ++st){"
                                                                              "          a_n.x = a_base_triangle.x + w / pow(2.0, float(st) + 1.0);"
@@ -235,6 +252,7 @@ void FractalWindowRenderer::initialization()
                                                                              "uniform float scale;"
                                                                              "uniform int iter_serp_square;"
                                                                              "varying highp vec2 coords;"
+                                                                             "uniform vec2 offset;"
 
 
                                                                              "bool check(vec2 a, vec2 b, vec2 c, vec2 d,vec2 z){"
@@ -251,8 +269,8 @@ void FractalWindowRenderer::initialization()
                                                                              "void main() {"
                                                                              "  vec2 z, a, b, c, d, a_n, b_n, c_n, d_n;"
 
-                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x;"
-                                                                             "  z.y = (coords.y) * scale - center.y;"
+                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x - offset.x;"
+                                                                             "  z.y = (coords.y) * scale - center.y + offset.y;"
 
                                                                              "  float w = abs(a_base_square.x) + abs(d_base_square.x);"
                                                                              "  float h = abs(a_base_square.y) + abs(b_base_square.y);"
@@ -264,7 +282,7 @@ void FractalWindowRenderer::initialization()
                                                                              "  b_cd = c_base_square.x;"
 
                                                                              "  if(z.x - b_ab >= 0.0 && z.x - b_cd <= 0.0 && z.y - b_ad >= 0.0 && z.y - b_bc <= 0.0){"
-                                                                             "      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);"
+                                                                             "      gl_FragColor = vec4(0.5, 0.9, 0.5, 1.0);"
                                                                              "      for(int st = 1; st < iter_serp_square; ++st){"
                                                                              "          a_n.x = a_base_square.x + w / pow(3.0, float(st));"
                                                                              "          a_n.y = a_base_square.y + h / pow(3.0, float(st));"

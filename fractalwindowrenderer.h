@@ -20,6 +20,9 @@ public:
     float fScale() const;
     void setFScale(float newFScale);
 
+    float fAGulie() const;
+    void setFAGulie(float newFAGulie);
+
     float yOffset() const;
     void setYOffset(float newYOffset);
 
@@ -41,6 +44,7 @@ private:
     QQuickWindow *m_window = nullptr;
     QOpenGLShaderProgram *m_program = nullptr;
     float m_fScale = 1.0;
+    float m_fAGulie = 1.0;
     float m_xOffset = 0.0;
     float m_yOffset = 0.0;
 };
