@@ -29,7 +29,7 @@ qt_add_qml_module(appPrototype
     assets/images/4.jpg
     assets/images/5.jpg
     assets/images/6.jpg
-    assets/images/7.jpg
+	assets/images/7.jpg
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

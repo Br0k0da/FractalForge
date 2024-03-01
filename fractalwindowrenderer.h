@@ -5,11 +5,13 @@
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
 #include <QQuickWindow>
+// #include <fractaltype.h>
 
 class FractalWindowRenderer : public QObject, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:
+    FractalWindowRenderer();
     ~FractalWindowRenderer();
 
     void setViewportSize(const QSize &size) { m_viewportSize = size; }
@@ -23,6 +25,12 @@ public:
 
     float xOffset() const;
     void setXOffset(float newXOffset);
+
+    // FractalType *fractalFromList = nullptr;
+
+    void resetProgram();
+
+    int fractalType = 0;
 
 public slots:
     void initialization();

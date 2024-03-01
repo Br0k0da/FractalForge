@@ -31,6 +31,9 @@ void FractalWindow::sync()
 {
     if (!m_renderer) {
         m_renderer = new FractalWindowRenderer();
+
+        m_renderer->fractalType = m_fractalType;
+
         connect(window(), &QQuickWindow::beforeRendering, m_renderer, &FractalWindowRenderer::initialization, Qt::DirectConnection);
         connect(window(), &QQuickWindow::afterRenderPassRecording, m_renderer, &FractalWindowRenderer::paint, Qt::DirectConnection);
     }
@@ -41,6 +44,8 @@ void FractalWindow::sync()
     m_renderer->setFScale(m_fScale);
     m_renderer->setXOffset(m_xOffset);
     m_renderer->setYOffset(m_yOffset);
+
+    m_renderer->fractalType = m_fractalType;
 
     // qInfo() << "m_fScale" << m_fScale;
 
@@ -119,4 +124,24 @@ void FractalWindow::setXOffset(float newXOffset)
         return;
     m_xOffset = newXOffset;
     emit xOffsetChanged();
+}
+
+int FractalWindow::fractalType() const
+{
+    return m_fractalType;
+}
+
+void FractalWindow::setFractalType(int newFractalType)
+{
+    if (m_fractalType == newFractalType)
+        return;
+    m_fractalType = newFractalType;
+
+    if(m_renderer)
+    {
+        m_renderer->fractalType = m_fractalType;
+        m_renderer->resetProgram();
+    }
+
+    emit fractalTypeChanged();
 }

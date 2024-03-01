@@ -13,6 +13,7 @@ class FractalWindow : public QQuickItem
     Q_PROPERTY(float fScale READ fScale WRITE setFScale NOTIFY fScaleChanged FINAL)
     Q_PROPERTY(float xOffset READ xOffset WRITE setXOffset NOTIFY xOffsetChanged FINAL)
     Q_PROPERTY(float yOffset READ yOffset WRITE setYOffset NOTIFY yOffsetChanged FINAL)
+    Q_PROPERTY(int fractalType READ fractalType WRITE setFractalType NOTIFY fractalTypeChanged FINAL)
 
     QML_ELEMENT
 public:
@@ -33,6 +34,9 @@ public:
     float xOffset() const;
     void setXOffset(float newXOffset);
 
+    int fractalType() const;
+    void setFractalType(int newFractalType);
+
 public slots:
     void sync();
     void cleanup();
@@ -46,6 +50,8 @@ signals:
 
     void xOffsetChanged();
 
+    void fractalTypeChanged();
+
 private slots:
     void handleWindowChanged(QQuickWindow* wnd);
 
@@ -58,6 +64,7 @@ private:
     float m_fScale = 1.0;
     float m_yOffset = 0.0;
     float m_xOffset = 0.0;
+    int m_fractalType = 0;
 };
 
 #endif // FRACTALWINDOW_H

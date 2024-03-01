@@ -4,6 +4,7 @@ import QtQuick.Controls
 import QtQuick.Window
 import Prototype
 import fractalforge.ButtonController
+// import fractalforge.FractalType
 
 Window {
     id: root

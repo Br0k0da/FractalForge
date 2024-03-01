@@ -40,14 +40,29 @@ void FractalWindowRenderer::setXOffset(float newXOffset)
     m_xOffset = newXOffset;
 }
 
+void FractalWindowRenderer::resetProgram()
+{
+    delete m_program;
+    m_program = nullptr;
+}
+
+FractalWindowRenderer::FractalWindowRenderer()
+{
+    // fractalFromList = new FractalType();
+    // qmlRegisterSingletonInstance("fractalforge.FractalFromList", 1, 0, "FractalFromList", fractalFromList);
+}
+
 FractalWindowRenderer::~FractalWindowRenderer()
 {
     delete m_program;
+    // delete fractalFromList;
 }
 
 void FractalWindowRenderer::initialization()
 {
     if (!m_program) {
+        qInfo() << fractalType << "fractalType";
+
         QSGRendererInterface *rif = m_window->rendererInterface();
         Q_ASSERT(rif->graphicsApi() == QSGRendererInterface::OpenGL);
 
@@ -63,6 +78,8 @@ void FractalWindowRenderer::initialization()
                                                     "}");
         //Фрактал Мандельброта
         ///*
+
+        if(fractalType == 0)
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
                                                                              "uniform int iter;"
@@ -96,7 +113,8 @@ void FractalWindowRenderer::initialization()
         //*/
 
         // Фрактал Жюлье
-        /*
+
+        if(fractalType == 1)
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
                                                                              "uniform float a_gulie;"
@@ -129,7 +147,6 @@ void FractalWindowRenderer::initialization()
                                                                              "else"
                                                                              "    gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
                                                                              "}");
-        */
         // Треугольники Серпинского
         /*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
@@ -744,64 +761,68 @@ void FractalWindowRenderer::initialization()
 
 void FractalWindowRenderer::paint()
 {
-    m_window->beginExternalCommands();
 
-    m_program->bind();
+    if(m_program)
+    {
+        m_window->beginExternalCommands();
 
-    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        m_program->bind();
 
-    m_program->enableAttributeArray(0);
+        // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    float values[] = {
-        -1, -1,
-        1,  -1,
-        -1,  1,
-        1,   1
-    };
+        m_program->enableAttributeArray(0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+        float values[] = {
+            -1, -1,
+            1,  -1,
+            -1,  1,
+            1,   1
+        };
 
-    //Общие переменные
-    m_program->setAttributeArray(0, GL_FLOAT, values, 2);
-    m_program->setUniformValue("scale", (float)m_fScale);
-    m_program->setUniformValue("center", QPointF(0.0, 0.0));
-    m_program->setUniformValue("offset", QPointF(m_xOffset, m_yOffset));
-    m_program->setUniformValue("iter", 512);
-    // Для Жюлье
-    m_program->setUniformValue("iter_gulie", 40);
-    m_program->setUniformValue("a_gulie", (float)0.53);
-    // Для Треугольника Серписнского
-    m_program->setUniformValue("iter_serp_triangle", 7);
-    m_program->setUniformValue("k_serp", (float)1.75);
-    m_program->setUniformValue("a_base_triangle", QPointF(-0.8, -0.7));
-    m_program->setUniformValue("b_base_triangle", QPointF(0.0, 0.7));
-    m_program->setUniformValue("c_base_triangle", QPointF(0.8, -0.7));
-    // Для Ковра Серписнского
-    m_program->setUniformValue("iter_serp_square", 5);
-    m_program->setUniformValue("a_base_square", QPointF(-0.6, -0.6));
-    m_program->setUniformValue("b_base_square", QPointF(-0.6, 0.6));
-    m_program->setUniformValue("c_base_square", QPointF(0.6, 0.6));
-    m_program->setUniformValue("d_base_square", QPointF(0.6, -0.6));
-    // Для Снежинки Коха (На доработку)
-    m_program->setUniformValue("iter_koh", 5);
-    m_program->setUniformValue("k_koh", (float)1.75);
-    m_program->setUniformValue("a_base_koh", QPointF(-0.8, -0.7));
-    m_program->setUniformValue("b_base_koh", QPointF(0.0, 0.7));
-    m_program->setUniformValue("c_base_koh", QPointF(0.8, -0.7));
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        //Общие переменные
+        m_program->setAttributeArray(0, GL_FLOAT, values, 2);
+        m_program->setUniformValue("scale", (float)m_fScale);
+        m_program->setUniformValue("center", QPointF(0.0, 0.0));
+        m_program->setUniformValue("offset", QPointF(m_xOffset, m_yOffset));
+        m_program->setUniformValue("iter", 512);
+        // Для Жюлье
+        m_program->setUniformValue("iter_gulie", 40);
+        m_program->setUniformValue("a_gulie", (float)0.53);
+        // Для Треугольника Серписнского
+        m_program->setUniformValue("iter_serp_triangle", 7);
+        m_program->setUniformValue("k_serp", (float)1.75);
+        m_program->setUniformValue("a_base_triangle", QPointF(-0.8, -0.7));
+        m_program->setUniformValue("b_base_triangle", QPointF(0.0, 0.7));
+        m_program->setUniformValue("c_base_triangle", QPointF(0.8, -0.7));
+        // Для Ковра Серписнского
+        m_program->setUniformValue("iter_serp_square", 5);
+        m_program->setUniformValue("a_base_square", QPointF(-0.6, -0.6));
+        m_program->setUniformValue("b_base_square", QPointF(-0.6, 0.6));
+        m_program->setUniformValue("c_base_square", QPointF(0.6, 0.6));
+        m_program->setUniformValue("d_base_square", QPointF(0.6, -0.6));
+        // Для Снежинки Коха (На доработку)
+        m_program->setUniformValue("iter_koh", 5);
+        m_program->setUniformValue("k_koh", (float)1.75);
+        m_program->setUniformValue("a_base_koh", QPointF(-0.8, -0.7));
+        m_program->setUniformValue("b_base_koh", QPointF(0.0, 0.7));
+        m_program->setUniformValue("c_base_koh", QPointF(0.8, -0.7));
 
 
 
-    glViewport(m_viewportSize.width() * 0.333, m_viewportSize.height() * 0.01, m_viewportSize.width() * 0.663, m_viewportSize.height() * 0.98);
+        glViewport(m_viewportSize.width() * 0.333, m_viewportSize.height() * 0.01, m_viewportSize.width() * 0.663, m_viewportSize.height() * 0.98);
 
-    glDisable(GL_DEPTH_TEST);
+        glDisable(GL_DEPTH_TEST);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-    m_program->disableAttributeArray(0);
-    m_program->release();
+        m_program->disableAttributeArray(0);
+        m_program->release();
 
-    m_window->endExternalCommands();
+        m_window->endExternalCommands();
+    }
 }
