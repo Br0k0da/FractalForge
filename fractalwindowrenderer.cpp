@@ -1,14 +1,83 @@
 #include "fractalwindowrenderer.h"
+#include <QDebug>
 
+float FractalWindowRenderer::fScale() const
+{
+    return m_fScale;
+}
+
+void FractalWindowRenderer::setFScale(float newFScale)
+{
+    // qInfo() << "Try set scale:" << newFScale;
+    if (qFuzzyCompare(m_fScale, newFScale))
+        return;
+    m_fScale = newFScale;
+
+    // qInfo() << "Set new scale:" << newFScale << "|" << m_fScale;
+}
+
+float FractalWindowRenderer::fAGulie() const
+{
+    return m_fAGulie;
+}
+
+void FractalWindowRenderer::setFAGulie(float newFAGulie)
+{
+    // qInfo() << "Try set scale:" << newFScale;
+    if (qFuzzyCompare(m_fAGulie, newFAGulie))
+        return;
+    m_fAGulie = newFAGulie;
+
+    // qInfo() << "Set new scale:" << newFScale << "|" << m_fScale;
+}
+
+float FractalWindowRenderer::yOffset() const
+{
+    return m_yOffset;
+}
+
+void FractalWindowRenderer::setYOffset(float newYOffset)
+{
+    if (qFuzzyCompare(m_yOffset, newYOffset))
+        return;
+    m_yOffset = newYOffset;
+}
+
+float FractalWindowRenderer::xOffset() const
+{
+    return m_xOffset;
+}
+
+void FractalWindowRenderer::setXOffset(float newXOffset)
+{
+    if (qFuzzyCompare(m_xOffset, newXOffset))
+        return;
+    m_xOffset = newXOffset;
+}
+
+void FractalWindowRenderer::resetProgram()
+{
+    delete m_program;
+    m_program = nullptr;
+}
+
+FractalWindowRenderer::FractalWindowRenderer()
+{
+    // fractalFromList = new FractalType();
+    // qmlRegisterSingletonInstance("fractalforge.FractalFromList", 1, 0, "FractalFromList", fractalFromList);
+}
 
 FractalWindowRenderer::~FractalWindowRenderer()
 {
     delete m_program;
+    // delete fractalFromList;
 }
 
 void FractalWindowRenderer::initialization()
 {
     if (!m_program) {
+        // qInfo() << fractalType << "fractalType";
+
         QSGRendererInterface *rif = m_window->rendererInterface();
         Q_ASSERT(rif->graphicsApi() == QSGRendererInterface::OpenGL);
 
@@ -23,16 +92,19 @@ void FractalWindowRenderer::initialization()
                                                     "    coords = vertices.xy;"
                                                     "}");
         //Фрактал Мандельброта
-        /*
+        ///*
+
+        if(fractalType == 0)
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
                                                                              "uniform int iter;"
                                                                              "varying highp vec2 coords;"
+                                                                             "uniform vec2 offset;"
 
                                                                              "void main() {"
                                                                              "  vec2 z, c;"
-                                                                             "  c.x = 1.3333 * (coords.x - 0.5) * scale - center.x;"
-                                                                             "  c.y = (coords.y) * scale - center.y;"
+                                                                             "  c.x = 1.3333 * (coords.x - 0.5) * scale - center.x - offset.x;"
+                                                                             "  c.y = (coords.y) * scale - center.y + offset.y;"
                                                                              "  z.x = 0.0;"
                                                                              "  z.y = 0.0;"
 
@@ -49,19 +121,21 @@ void FractalWindowRenderer::initialization()
                                                                              "  }"
 
                                                                              "if(i == iter)"
-                                                                             "  gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
+                                                                             "  gl_FragColor = vec4(0.5, 0.9, 0.5, 1.0);"
                                                                              "else"
                                                                              "    gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
                                                                              "}");
-        */
+        //*/
 
         // Фрактал Жюлье
-        /*
+
+        if(fractalType == 1)
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
                                                                              "uniform float a_gulie;"
                                                                              "uniform int iter_gulie;"
                                                                              "varying highp vec2 coords;"
+                                                                             "uniform vec2 offset;"
 
                                                                              "void main() {"
                                                                              "  vec2 c, z;"
@@ -69,8 +143,8 @@ void FractalWindowRenderer::initialization()
                                                                              "  float Pi = 3.14159265358979323846;"
                                                                              "  c.x = r * cos(Pi * a_gulie);"
                                                                              "  c.y = r * sin(Pi * a_gulie);"
-                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x;"
-                                                                             "  z.y = (coords.y) * scale - center.y;"
+                                                                             "  z.x = 1.3333 * (coords.x) * 1.0 - center.x - offset.x;"
+                                                                             "  z.y = (coords.y) * 1.0 - center.y + offset.y;"
 
                                                                              "  int i = 0;"
                                                                              "  float x = z.x;"
@@ -85,13 +159,12 @@ void FractalWindowRenderer::initialization()
                                                                              "  }"
 
                                                                              "if(i == iter_gulie)"
-                                                                             "    gl_FragColor = vec4(144.0, 144.0, 144.0, 255.0);"
+                                                                             "    gl_FragColor = vec4(0.5, 0.9, 0.5, 1.0);"
                                                                              "else"
-                                                                             "    gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
+                                                                             "    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);"
                                                                              "}");
-        */
         // Треугольники Серпинского
-        ///*
+        /*
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform vec2 a_base_triangle;"
                                                                              "uniform vec2 b_base_triangle;"
@@ -100,6 +173,7 @@ void FractalWindowRenderer::initialization()
                                                                              "uniform float k_serp;"
                                                                              "uniform int iter_serp_triangle;"
                                                                              "varying highp vec2 coords;"
+                                                                             "uniform vec2 offset;"
 
 
                                                                              "bool check(vec2 a, vec2 b, vec2 c, vec2 z){"
@@ -115,8 +189,8 @@ void FractalWindowRenderer::initialization()
                                                                              "void main() {"
                                                                              "  vec2 z, a, b, c, a_n, b_n, c_n;"
 
-                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x;"
-                                                                             "  z.y = (coords.y) * scale - center.y;"
+                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x - offset.x;"
+                                                                             "  z.y = (coords.y) * scale - center.y + offset.y;"
 
                                                                              "  float w = abs(c_base_triangle.x - a_base_triangle.x);"
                                                                              "  float h = w * cos(radians(30.0f));"
@@ -127,7 +201,7 @@ void FractalWindowRenderer::initialization()
                                                                              "  b_bc = c_base_triangle.y - k_bc * c_base_triangle.x;"
 
                                                                              "  if(k_ab * z.x + b_ab - z.y >= 0.0 && k_bc * z.x + b_bc - z.y >= 0.0 && b_ac - z.y <= 0.0){"
-                                                                             "      gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
+                                                                             "      gl_FragColor = vec4(0.5, 0.9, 0.5, 1.0);"
 
                                                                              "      for(int st = 1; st < iter_serp_triangle; ++st){"
                                                                              "          a_n.x = a_base_triangle.x + w / pow(2.0, float(st) + 1.0);"
@@ -165,7 +239,7 @@ void FractalWindowRenderer::initialization()
                                                                              "      gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
                                                                              "  }"
                                                                              "}");
-        //*/
+        */
 
 
         // Ковёр Серпинского
@@ -178,6 +252,7 @@ void FractalWindowRenderer::initialization()
                                                                              "uniform float scale;"
                                                                              "uniform int iter_serp_square;"
                                                                              "varying highp vec2 coords;"
+                                                                             "uniform vec2 offset;"
 
 
                                                                              "bool check(vec2 a, vec2 b, vec2 c, vec2 d,vec2 z){"
@@ -194,8 +269,8 @@ void FractalWindowRenderer::initialization()
                                                                              "void main() {"
                                                                              "  vec2 z, a, b, c, d, a_n, b_n, c_n, d_n;"
 
-                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x;"
-                                                                             "  z.y = (coords.y) * scale - center.y;"
+                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x - offset.x;"
+                                                                             "  z.y = (coords.y) * scale - center.y + offset.y;"
 
                                                                              "  float w = abs(a_base_square.x) + abs(d_base_square.x);"
                                                                              "  float h = abs(a_base_square.y) + abs(b_base_square.y);"
@@ -207,7 +282,7 @@ void FractalWindowRenderer::initialization()
                                                                              "  b_cd = c_base_square.x;"
 
                                                                              "  if(z.x - b_ab >= 0.0 && z.x - b_cd <= 0.0 && z.y - b_ad >= 0.0 && z.y - b_bc <= 0.0){"
-                                                                             "      gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
+                                                                             "      gl_FragColor = vec4(0.5, 0.9, 0.5, 1.0);"
                                                                              "      for(int st = 1; st < iter_serp_square; ++st){"
                                                                              "          a_n.x = a_base_square.x + w / pow(3.0, float(st));"
                                                                              "          a_n.y = a_base_square.y + h / pow(3.0, float(st));"
@@ -704,63 +779,68 @@ void FractalWindowRenderer::initialization()
 
 void FractalWindowRenderer::paint()
 {
-    m_window->beginExternalCommands();
 
-    m_program->bind();
+    if(m_program)
+    {
+        m_window->beginExternalCommands();
 
-    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        m_program->bind();
 
-    m_program->enableAttributeArray(0);
+        // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    float values[] = {
-        -1, -1,
-        1, -1,
-        -1, 1,
-        1, 1
-    };
+        m_program->enableAttributeArray(0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+        float values[] = {
+            -1, -1,
+            1,  -1,
+            -1,  1,
+            1,   1
+        };
 
-    //Общие переменные
-    m_program->setAttributeArray(0, GL_FLOAT, values, 2);
-    m_program->setUniformValue("scale", (float)1);
-    m_program->setUniformValue("center", QPointF(0.0, 0.0));
-    m_program->setUniformValue("iter", 1000);
-    // Для Жюлье
-    m_program->setUniformValue("iter_gulie", 40);
-    m_program->setUniformValue("a_gulie", (float)0.5);
-    // Для Треугольника Серписнского
-    m_program->setUniformValue("iter_serp_triangle", 5);
-    m_program->setUniformValue("k_serp", (float)1.75);
-    m_program->setUniformValue("a_base_triangle", QPointF(-0.8, -0.7));
-    m_program->setUniformValue("b_base_triangle", QPointF(0.0, 0.7));
-    m_program->setUniformValue("c_base_triangle", QPointF(0.8, -0.7));
-    // Для Ковра Серписнского
-    m_program->setUniformValue("iter_serp_square", 5);
-    m_program->setUniformValue("a_base_square", QPointF(-0.6, -0.6));
-    m_program->setUniformValue("b_base_square", QPointF(-0.6, 0.6));
-    m_program->setUniformValue("c_base_square", QPointF(0.6, 0.6));
-    m_program->setUniformValue("d_base_square", QPointF(0.6, -0.6));
-    // Для Снежинки Коха (На доработку)
-    m_program->setUniformValue("iter_koh", 5);
-    m_program->setUniformValue("k_koh", (float)1.75);
-    m_program->setUniformValue("a_base_koh", QPointF(-0.8, -0.7));
-    m_program->setUniformValue("b_base_koh", QPointF(0.0, 0.7));
-    m_program->setUniformValue("c_base_koh", QPointF(0.8, -0.7));
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        //Общие переменные
+        m_program->setAttributeArray(0, GL_FLOAT, values, 2);
+        m_program->setUniformValue("scale", (float)m_fScale);
+        m_program->setUniformValue("center", QPointF(0.0, 0.0));
+        m_program->setUniformValue("offset", QPointF(m_xOffset, m_yOffset));
+        m_program->setUniformValue("iter", 512);
+        // Для Жюлье
+        m_program->setUniformValue("iter_gulie", 40);
+        m_program->setUniformValue("a_gulie", (float)m_fAGulie);
+        // Для Треугольника Серписнского
+        m_program->setUniformValue("iter_serp_triangle", 7);
+        m_program->setUniformValue("k_serp", (float)1.75);
+        m_program->setUniformValue("a_base_triangle", QPointF(-0.8, -0.7));
+        m_program->setUniformValue("b_base_triangle", QPointF(0.0, 0.7));
+        m_program->setUniformValue("c_base_triangle", QPointF(0.8, -0.7));
+        // Для Ковра Серписнского
+        m_program->setUniformValue("iter_serp_square", 5);
+        m_program->setUniformValue("a_base_square", QPointF(-0.6, -0.6));
+        m_program->setUniformValue("b_base_square", QPointF(-0.6, 0.6));
+        m_program->setUniformValue("c_base_square", QPointF(0.6, 0.6));
+        m_program->setUniformValue("d_base_square", QPointF(0.6, -0.6));
+        // Для Снежинки Коха (На доработку)
+        m_program->setUniformValue("iter_koh", 5);
+        m_program->setUniformValue("k_koh", (float)1.75);
+        m_program->setUniformValue("a_base_koh", QPointF(-0.8, -0.7));
+        m_program->setUniformValue("b_base_koh", QPointF(0.0, 0.7));
+        m_program->setUniformValue("c_base_koh", QPointF(0.8, -0.7));
 
 
 
-    glViewport(m_viewportSize.width() * 0.333, m_viewportSize.height() * 0.01, m_viewportSize.width() * 0.663, m_viewportSize.height() * 0.98);
+        glViewport(m_viewportSize.width() * 0.333, m_viewportSize.height() * 0.01, m_viewportSize.width() * 0.663, m_viewportSize.height() * 0.98);
 
-    glDisable(GL_DEPTH_TEST);
+        glDisable(GL_DEPTH_TEST);
 
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-    m_program->disableAttributeArray(0);
-    m_program->release();
+        m_program->disableAttributeArray(0);
+        m_program->release();
 
-    m_window->endExternalCommands();
+        m_window->endExternalCommands();
+    }
 }

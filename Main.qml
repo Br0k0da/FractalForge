@@ -4,6 +4,7 @@ import QtQuick.Controls
 import QtQuick.Window
 import Prototype
 import fractalforge.ButtonController
+// import fractalforge.FractalType
 
 Window {
   id: root
@@ -205,7 +206,76 @@ Window {
           radius: 5
           color: "black"
 
-          FractalWindow {}
+          MouseArea {
+            id: fractalWindowMouseArea
+            anchors.fill: display
+
+            property var prevXOffset
+            property var prevYOffset
+            property var time
+
+            onPressed: mouse => {
+                         prevXOffset = mouse.x
+                         prevYOffset = mouse.y
+                         time = Date.now()
+                         console.log("prevYOffset: " + prevYOffset)
+                         console.log("mouse.y: " + mouse.y)
+                       }
+
+            onPositionChanged: mouse => {
+
+                                 if (pressedButtons == Qt.LeftButton) {
+                                   var xDistinction = mouse.x - prevXOffset
+                                   var yDistinction = mouse.y - prevYOffset
+                                   var velocity = Math.sqrt(
+                                     xDistinction * xDistinction + yDistinction
+                                     * yDistinction) / (Date.now() - time)
+
+                                   // console.log("xDist: " + xDistinction)
+                                   if (velocity > 5) {
+                                     velocity = 5.0
+                                   }
+
+                                   if (velocity < 1) {
+                                     velocity = 1.0
+                                   }
+
+                                   if (fractalWindow.fScale < 1) {
+                                     velocity -= fractalWindow.fScale
+                                   }
+
+                                   fractalWindow.xOffset += xDistinction
+                                   / fractalWindow.width * velocity
+                                   fractalWindow.yOffset += yDistinction
+                                   / fractalWindow.height * velocity
+
+                                   display.update()
+                                 }
+
+                                 prevXOffset = mouse.x
+                                 prevYOffset = mouse.y
+                                 time = Date.now()
+                               }
+
+            onWheel: wheel => {
+                       if (wheel.angleDelta.y < 0) {
+                         fractalWindow.fScale *= 1.05
+                         fractalWindow.fAGulie *= 1.013
+
+                         console.log(fractalWindow.fAGulie)
+                         display.update()
+                       } else {
+                         fractalWindow.fScale *= 0.95
+                         fractalWindow.fAGulie *= 0.987
+                         display.update()
+                       }
+                     }
+
+            FractalWindow {
+              id: fractalWindow
+              anchors.fill: fractalWindowMouseArea
+            }
+          }
         }
       }
     }
