@@ -4,8 +4,8 @@ import QtQuick.Controls
 import QtQuick.Window
 import Prototype
 import fractalforge.ButtonController
-// import fractalforge.FractalType
 
+// import fractalforge.FractalType
 Window {
   id: root
   title: qsTr("FractalForge")
@@ -100,12 +100,11 @@ Window {
             anchors {
               top: parent.top
               right: parent.right
-              rightMargin: width + 5
             }
-            width: parent.width * 0.22
+            width: parent.width * 0.45
             height: parent.height * 0.45
 
-            buttonText: "empty"
+            buttonText: "Перестроить"
             colorDefualt: "#A0A299"
             colorPress: "#B2B4AB"
             colorMouse: "#92938C"
@@ -119,13 +118,13 @@ Window {
           CustomButton {
             id: button2
             anchors {
-              top: parent.top
-              right: parent.right
+              bottom: parent.bottom
+              horizontalCenter: parent.horizontalCenter
             }
-            width: parent.width * 0.22
+            width: parent.width * 0.45
             height: parent.height * 0.45
 
-            buttonText: "empty"
+            buttonText: "Удалить"
             colorDefualt: "#C8A591"
             colorPress: "#DCB59F"
             colorMouse: "#B59685"
@@ -139,13 +138,13 @@ Window {
           CustomButton {
             id: button3
             anchors {
-              bottom: parent.bottom
+              top: parent.top
               left: parent.left
             }
             width: parent.width * 0.45
             height: parent.height * 0.45
 
-            buttonText: "Формульный"
+            buttonText: "Построить"
             colorDefualt: "#9C9C9C"
             colorPress: "#B2B4AB"
             colorMouse: "#858585"
@@ -153,27 +152,6 @@ Window {
 
             onClicked: {
               ButtonController.fractalType = 0
-              console.log(ButtonController.fractalType)
-            }
-          }
-
-          CustomButton {
-            id: button4
-            anchors {
-              bottom: parent.bottom
-              right: parent.right
-            }
-            width: parent.width * 0.45
-            height: parent.height * 0.45
-
-            buttonText: "Хаотичный"
-            colorDefualt: "#9C9C9C"
-            colorPress: "#B2B4AB"
-            colorMouse: "#858585"
-            colorFont: "#EDECDF"
-
-            onClicked: {
-              ButtonController.fractalType = 1
               console.log(ButtonController.fractalType)
             }
           }

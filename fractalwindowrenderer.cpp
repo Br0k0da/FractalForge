@@ -93,7 +93,6 @@ void FractalWindowRenderer::initialization()
                                                     "}");
         //Фрактал Мандельброта
         ///*
-
         if(fractalType == 0)
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
@@ -128,7 +127,6 @@ void FractalWindowRenderer::initialization()
         //*/
 
         // Фрактал Жюлье
-
         if(fractalType == 1)
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
@@ -163,8 +161,9 @@ void FractalWindowRenderer::initialization()
                                                                              "else"
                                                                              "    gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);"
                                                                              "}");
+        //*/
         // Треугольники Серпинского
-        /*
+        if(fractalType == 2)
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform vec2 a_base_triangle;"
                                                                              "uniform vec2 b_base_triangle;"
@@ -239,11 +238,10 @@ void FractalWindowRenderer::initialization()
                                                                              "      gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
                                                                              "  }"
                                                                              "}");
-        */
-
+        //*/
 
         // Ковёр Серпинского
-        /*
+        if(fractalType == 3)
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform vec2 a_base_square;"
                                                                              "uniform vec2 b_base_square;"
@@ -321,96 +319,95 @@ void FractalWindowRenderer::initialization()
                                                                              "      gl_FragColor = vec4(0.0, 0.0, 0.0, 255.0);"
                                                                              "  }"
                                                                              "}");
-        */
+        //*/
         // Снежинка Коха (доработка)
-        /*
+        if(fractalType == 4)
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
-                                                                             "uniform vec2 a_base;"
-                                                                             "uniform vec2 b_base;"
-                                                                             "uniform vec2 c_base;"
+                                                                             "uniform vec2 a_base_koh;"
+                                                                             "uniform vec2 b_base_koh;"
+                                                                             "uniform vec2 c_base_koh;"
                                                                              "uniform float scale;"
-                                                                             "uniform float k;"
+                                                                             "uniform float k_koh;"
                                                                              "uniform int iter_koh;"
                                                                              "varying highp vec2 coords;"
+                                                                             "uniform vec2 offset;"
 
 
                                                                              "bool check(vec2 a, vec2 b, vec2 c, vec2 z){"
-                                                                             "  float k_ab = k, k_bc = -k, b_ac, b_ab, b_bc;"
-                                                                             "  int znak = 1;"
+                                                                             "  float k_ab = k_koh, k_bc = -k_koh, b_ac, b_ab, b_bc;"
+                                                                             "  float znak = 1.0;"
                                                                              "  if(b.y < a.y){"
-                                                                             "      znak = -1;"
-                                                                             "      k_ab = -k;"
-                                                                             "      k_bc = k;"
+                                                                             "      znak = -1.0;"
+                                                                             "      k_ab = -k_koh;"
+                                                                             "      k_bc = k_koh;"
                                                                              "  }"
                                                                              "  b_ac = c.y;"
                                                                              "  b_ab = a.y - k_ab * a.x;"
                                                                              "  b_bc = c.y - k_bc * c.x;"
-                                                                             "  if(znak * (k_ab * z.x + b_ab - z.y) >= 0 && znak * (k_bc * z.x + b_bc - z.y) >= 0 && znak * (b_ac - z.y) <= 0)"
+                                                                             "  if(znak * (k_ab * z.x + b_ab - z.y) >= 0.0 && znak * (k_bc * z.x + b_bc - z.y) >= 0.0 && znak * (b_ac - z.y) <= 0.0)"
                                                                              "      return true;"
                                                                              "  return false;"
                                                                              "}"
 
 
 
-                                                                             "vec2 l_a(vec2 a, int znak, float st, float w, float h){"
+                                                                             "vec2 l_a(vec2 a, float znak, float st, float w, float h){"
                                                                              "  a.x = a.x;"
-                                                                             "  a.y = a.y + znak * (h / pow(3,st) + h / pow(3,st));"
+                                                                             "  a.y = a.y + znak * (h / pow(3.0,st) + h / pow(3.0,st));"
                                                                              "  return a;"
                                                                              "}"
 
-                                                                             "vec2 l_b(vec2 a, int znak, float st, float w, float h){"
-                                                                             "  a.x = a.x + w / (2 * pow(3, st));"
-                                                                             "  a.y = a.y + znak * (h / pow(3, st));"
+                                                                             "vec2 l_b(vec2 a, float znak, float st, float w, float h){"
+                                                                             "  a.x = a.x + w / (2.0 * pow(3.0, st));"
+                                                                             "  a.y = a.y + znak * (h / pow(3.0, st));"
                                                                              "  return a;"
                                                                              "}"
 
-                                                                             "vec2 l_c(vec2 a, int znak, float st, float w, float h){"
-                                                                             "  a.x = a.x + w / pow(3,st);"
-                                                                             "  a.y = a.y + znak * (h / pow(3, st) + h / pow(3, st));"
+                                                                             "vec2 l_c(vec2 a, float znak, float st, float w, float h){"
+                                                                             "  a.x = a.x + w / pow(3.0,st);"
+                                                                             "  a.y = a.y + znak * (h / pow(3.0, st) + h / pow(3.0, st));"
                                                                              "  return a;"
                                                                              "}"
 
 
 
-                                                                             "vec2 c_a(vec2 a, int znak, float st, float w, float h){"
-                                                                             "  a.x = a.x + w / pow(3, st);"
+                                                                             "vec2 c_a(vec2 a, float znak, float st, float w, float h){"
+                                                                             "  a.x = a.x + w / pow(3.0, st);"
                                                                              "  a.y = a.y;"
                                                                              "  return a;"
                                                                              "}"
 
-                                                                             "vec2 c_b(vec2 a, int znak, float st, float w, float h){"
-                                                                             "  a.x = a.x + w / (2 * pow(3, st - 0.1));"
-                                                                             "  a.y = a.y - znak * (h / pow(3, st));"
+                                                                             "vec2 c_b(vec2 a, float znak, float st, float w, float h){"
+                                                                             "  a.x = a.x + w / (2.0 * pow(3.0, st - 0.1));"
+                                                                             "  a.y = a.y - znak * (h / pow(3.0, st));"
                                                                              "  return a;"
                                                                              "}"
 
-                                                                             "vec2 c_c(vec2 a, int znak, float st, float w, float h){"
-                                                                             "  a.x = a.x + w / pow(3, st) + w / pow(3, st);"
+                                                                             "vec2 c_c(vec2 a, float znak, float st, float w, float h){"
+                                                                             "  a.x = a.x + w / pow(3.0, st) + w / pow(3.0, st);"
                                                                              "  a.y = a.y;"
                                                                              "  return a;"
                                                                              "}"
 
 
 
-                                                                             "vec2 r_a(vec2 c, int znak, float st, float w, float h){"
-                                                                             "  c.x = c.x - w / pow(3, st);"
-                                                                             "  c.y = c.y + znak * (h / pow(3, st) + h / pow(3, st));"
+                                                                             "vec2 r_a(vec2 c, float znak, float st, float w, float h){"
+                                                                             "  c.x = c.x - w / pow(3.0, st);"
+                                                                             "  c.y = c.y + znak * (h / pow(3.0, st) + h / pow(3.0, st));"
                                                                              "  return c;"
                                                                              "}"
 
-                                                                             "vec2 r_b(vec2 c, int znak, float st, float w, float h){"
-                                                                             "  c.x = c.x - w / (2 * pow(3, st));"
-                                                                             "  c.y = c.y + znak * (h / pow(3, st));"
+                                                                             "vec2 r_b(vec2 c, float znak, float st, float w, float h){"
+                                                                             "  c.x = c.x - w / (2.0 * pow(3.0, st));"
+                                                                             "  c.y = c.y + znak * (h / pow(3.0, st));"
                                                                              "  return c;"
                                                                              "}"
 
-                                                                             "vec2 r_c(vec2 c, int znak, float st, float w, float h){"
+                                                                             "vec2 r_c(vec2 c, float znak, float st, float w, float h){"
                                                                              "  c.x = c.x;"
-                                                                             "  c.y = c.y + znak * (h / pow(3, st) + h / pow(3, st));"
+                                                                             "  c.y = c.y + znak * (h / pow(3.0, st) + h / pow(3.0, st));"
                                                                              "  return c;"
                                                                              "}"
-
-
 
 
                                                                              "bool fifth(vec2 a, vec2 b, vec2 c, vec2 z){"
@@ -430,9 +427,9 @@ void FractalWindowRenderer::initialization()
                                                                              "      float h = w * cos(radians(30.0f));"
                                                                              "      float st = 1.0;"
                                                                              "      int iter = 2;"
-                                                                             "      int znak = 1;"
+                                                                             "      float znak = 1.0;"
                                                                              "      if(b.y < a.y)"
-                                                                             "          znak = -1;"
+                                                                             "          znak = -1.0;"
 
                                                                              "      st = 1.0;"
                                                                              "      a_n = l_a(a, znak, st, w, h);"
@@ -475,9 +472,9 @@ void FractalWindowRenderer::initialization()
                                                                              "      float h = w * cos(radians(30.0f));"
                                                                              "      float st = 1.0;"
                                                                              "      int iter = 2;"
-                                                                             "      int znak = 1;"
+                                                                             "      float znak = 1.0;"
                                                                              "      if(b.y < a.y)"
-                                                                             "          znak = -1;"
+                                                                             "          znak = -1.0;"
 
                                                                              "      st = 1.0;"
                                                                              "      a_n = l_a(a, znak, st, w, h);"
@@ -491,17 +488,17 @@ void FractalWindowRenderer::initialization()
                                                                              "      iter = 4;"
                                                                              "      while(iter != iter_koh){"
                                                                              "          a_const = a;"
-                                                                             "          for(int i = 0; i < pow(3, st - 1.0); ++i){"
+                                                                             "          for(int i = 0; float(i) < pow(3.0, st - 1.0); ++i){"
                                                                              "              a_n = l_a(a_const, znak, st, w, h);"
                                                                              "              b_n = l_b(a_const, znak, st, w, h);"
                                                                              "              c_n = l_c(a_const, znak, st, w, h);"
                                                                              "              if(iter == 4 && fifth(a_n, b_n, c_n,z))"
                                                                              "                  return true;"
-                                                                             "              a_const.x = a_const.x + w / (2 * pow(3, st - 1.0));"
-                                                                             "              a_const.y = a_const.y + znak * (h / pow(3, st - 1.0));"
+                                                                             "              a_const.x = a_const.x + w / (2.0 * pow(3.0, st - 1.0));"
+                                                                             "              a_const.y = a_const.y + znak * (h / pow(3.0, st - 1.0));"
                                                                              "          }"
                                                                              "          ++iter;"
-                                                                             "          ++st;"
+                                                                             "          st += 1.0;"
                                                                              "      }"
 
                                                                              "      st = 1.0;"
@@ -516,16 +513,16 @@ void FractalWindowRenderer::initialization()
                                                                              "      iter = 4;"
                                                                              "      while(iter != iter_koh){"
                                                                              "          a_const = a;"
-                                                                             "          for(int i = 0; i < pow(3, st - 1.0); ++i){"
+                                                                             "          for(int i = 0; float(i) < pow(3.0, st - 1.0); ++i){"
                                                                              "              a_n = c_a(a_const, znak, st, w, h);"
                                                                              "              b_n = c_b(a_const, znak, st, w, h);"
                                                                              "              c_n = c_c(a_const, znak, st, w, h);"
                                                                              "              if(iter == 4 && fifth(a_n, b_n, c_n,z))"
                                                                              "                  return true;"
-                                                                             "              a_const.x = a_const.x + w / pow(3, st - 1.0);"
+                                                                             "              a_const.x = a_const.x + w / pow(3.0, st - 1.0);"
                                                                              "          }"
                                                                              "          ++iter;"
-                                                                             "          ++st;"
+                                                                             "          st += 1.0;"
                                                                              "      }"
 
                                                                              "      st = 1.0;"
@@ -540,17 +537,17 @@ void FractalWindowRenderer::initialization()
                                                                              "      iter = 4;"
                                                                              "      while(iter != iter_koh){"
                                                                              "          c_const = c;"
-                                                                             "          for(int i = 0; i < pow(3, st - 1.0); ++i){"
+                                                                             "          for(int i = 0; float(i) < pow(3.0, st - 1.0); ++i){"
                                                                              "              a_n = r_a(c_const, znak, st, w, h);"
                                                                              "              b_n = r_b(c_const, znak, st, w, h);"
                                                                              "              c_n = r_c(c_const, znak, st, w, h);"
                                                                              "              if(iter == 4 && fifth(a_n, b_n, c_n,z))"
                                                                              "                  return true;"
-                                                                             "              c_const.x = c_const.x - w / (2 * pow(3, st - 1.0));"
-                                                                             "              c_const.y = c_const.y + znak * (h / pow(3, st - 1.0));"
+                                                                             "              c_const.x = c_const.x - w / (2.0 * pow(3.0, st - 1.0));"
+                                                                             "              c_const.y = c_const.y + znak * (h / pow(3.0, st - 1.0));"
                                                                              "          }"
                                                                              "          ++iter;"
-                                                                             "          ++st;"
+                                                                             "          st += 1.0;"
                                                                              "      }"
                                                                              "  }"
                                                                              "  return false;"
@@ -568,9 +565,9 @@ void FractalWindowRenderer::initialization()
                                                                              "      float h = w * cos(radians(30.0f));"
                                                                              "      float st = 1.0;"
                                                                              "      int iter = 2;"
-                                                                             "      int znak = 1;"
+                                                                             "      float znak = 1.0;"
                                                                              "      if(b.y < a.y)"
-                                                                             "          znak = -1;"
+                                                                             "          znak = -1.0;"
 
                                                                              "      st = 1.0;"
                                                                              "      a_n = l_a(a, znak, st, w, h);"
@@ -584,7 +581,7 @@ void FractalWindowRenderer::initialization()
                                                                              "      iter = 3;"
                                                                              "      while(iter != iter_koh){"
                                                                              "          a_const = a;"
-                                                                             "          for(int i = 0; i < pow(3, st - 1.0); ++i){"
+                                                                             "          for(int i = 0; float(i) < pow(3.0, st - 1.0); ++i){"
                                                                              "              a_n = l_a(a_const, znak, st, w, h);"
                                                                              "              b_n = l_b(a_const, znak, st, w, h);"
                                                                              "              c_n = l_c(a_const, znak, st, w, h);"
@@ -592,11 +589,11 @@ void FractalWindowRenderer::initialization()
                                                                              "                  return true;"
                                                                              "              if(iter == 4 && fifth(a_n, b_n, c_n,z))"
                                                                              "                  return true;"
-                                                                             "              a_const.x = a_const.x + w / (2 * pow(3, st - 1.0));"
-                                                                             "              a_const.y = a_const.y + znak * (h / pow(3, st - 1.0));"
+                                                                             "              a_const.x = a_const.x + w / (2.0 * pow(3.0, st - 1.0));"
+                                                                             "              a_const.y = a_const.y + znak * (h / pow(3.0, st - 1.0));"
                                                                              "          }"
                                                                              "          ++iter;"
-                                                                             "          ++st;"
+                                                                             "          st += 1.0;"
                                                                              "      }"
 
                                                                              "      st = 1.0;"
@@ -611,7 +608,7 @@ void FractalWindowRenderer::initialization()
                                                                              "      iter = 3;"
                                                                              "      while(iter != iter_koh){"
                                                                              "          a_const = a;"
-                                                                             "          for(int i = 0; i < pow(3, st - 1.0); ++i){"
+                                                                             "          for(int i = 0; float(i) < pow(3.0, st - 1.0); ++i){"
                                                                              "              a_n = c_a(a_const, znak, st, w, h);"
                                                                              "              b_n = c_b(a_const, znak, st, w, h);"
                                                                              "              c_n = c_c(a_const, znak, st, w, h);"
@@ -619,10 +616,10 @@ void FractalWindowRenderer::initialization()
                                                                              "                  return true;"
                                                                              "              if(iter == 4 && fifth(a_n, b_n, c_n,z))"
                                                                              "                  return true;"
-                                                                             "              a_const.x = a_const.x + w / pow(3, st - 1.0);"
+                                                                             "              a_const.x = a_const.x + w / pow(3.0, st - 1.0);"
                                                                              "          }"
                                                                              "          ++iter;"
-                                                                             "          ++st;"
+                                                                             "          st += 1.0;"
                                                                              "      }"
 
                                                                              "      st = 1.0;"
@@ -637,7 +634,7 @@ void FractalWindowRenderer::initialization()
                                                                              "      iter = 3;"
                                                                              "      while(iter != iter_koh){"
                                                                              "          c_const = c;"
-                                                                             "          for(int i = 0; i < pow(3, st - 1.0); ++i){"
+                                                                             "          for(int i = 0; float(i) < pow(3.0, st - 1.0); ++i){"
                                                                              "              a_n = r_a(c_const, znak, st, w, h);"
                                                                              "              b_n = r_b(c_const, znak, st, w, h);"
                                                                              "              c_n = r_c(c_const, znak, st, w, h);"
@@ -645,11 +642,11 @@ void FractalWindowRenderer::initialization()
                                                                              "                  return true;"
                                                                              "              if(iter == 4 && fifth(a_n, b_n, c_n,z))"
                                                                              "                  return true;"
-                                                                             "              c_const.x = c_const.x - w / (2 * pow(3, st - 1.0));"
-                                                                             "              c_const.y = c_const.y + znak * (h / pow(3, st - 1.0));"
+                                                                             "              c_const.x = c_const.x - w / (2.0 * pow(3.0, st - 1.0));"
+                                                                             "              c_const.y = c_const.y + znak * (h / pow(3.0, st - 1.0));"
                                                                              "          }"
                                                                              "          ++iter;"
-                                                                             "          ++st;"
+                                                                             "          st += 1.0;"
                                                                              "      }"
                                                                              "  }"
                                                                              "  return false;"
@@ -667,9 +664,9 @@ void FractalWindowRenderer::initialization()
                                                                              "      float h = w * cos(radians(30.0f));"
                                                                              "      float st = 1.0;"
                                                                              "      int iter = 2;"
-                                                                             "      int znak = 1;"
+                                                                             "      float znak = 1.0;"
                                                                              "      if(b.y < a.y)"
-                                                                             "          znak = -1;"
+                                                                             "          znak = -1.0;"
 
                                                                              "      st = 1.0;"
                                                                              "      a_n = l_a(a, znak, st, w, h);"
@@ -683,7 +680,7 @@ void FractalWindowRenderer::initialization()
                                                                              "      iter = 2;"
                                                                              "      while(iter != iter_koh){"
                                                                              "          a_const = a;"
-                                                                             "          for(int i = 0; i < pow(3, st - 1.0); ++i){"
+                                                                             "          for(int i = 0; float(i) < pow(3.0, st - 1.0); ++i){"
                                                                              "              a_n = l_a(a_const, znak, st, w, h);"
                                                                              "              b_n = l_b(a_const, znak, st, w, h);"
                                                                              "              c_n = l_c(a_const, znak, st, w, h);"
@@ -693,11 +690,11 @@ void FractalWindowRenderer::initialization()
                                                                              "                  return true;"
                                                                              "              if(iter == 4 && fifth(a_n, b_n, c_n,z) && i < 27)"
                                                                              "                  return true;"
-                                                                             "              a_const.x = a_const.x + w / (2 * pow(3, st - 1.0));"
-                                                                             "              a_const.y = a_const.y + h / pow(3, st - 1.0);"
+                                                                             "              a_const.x = a_const.x + w / (2.0 * pow(3.0, st - 1.0));"
+                                                                             "              a_const.y = a_const.y + h / pow(3.0, st - 1.0);"
                                                                              "          }"
                                                                              "          ++iter;"
-                                                                             "          ++st;"
+                                                                             "          st += 1.0;"
                                                                              "      }"
 
                                                                              "      st = 1.0;"
@@ -712,7 +709,7 @@ void FractalWindowRenderer::initialization()
                                                                              "      iter = 2;"
                                                                              "      while(iter != iter_koh){"
                                                                              "          a_const = a;"
-                                                                             "          for(int i = 0; i < pow(3, st - 1.0); ++i){"
+                                                                             "          for(int i = 0;float(i) < pow(3.0, st - 1.0); ++i){"
                                                                              "              a_n = c_a(a_const, znak, st, w, h);"
                                                                              "              b_n = c_b(a_const, znak, st, w, h);"
                                                                              "              c_n = c_c(a_const, znak, st, w, h);"
@@ -722,10 +719,10 @@ void FractalWindowRenderer::initialization()
                                                                              "                  return true;"
                                                                              "              if(iter == 4 && fifth(a_n, b_n, c_n,z) && i < 27)"
                                                                              "                  return true;"
-                                                                             "              a_const.x = a_const.x + w / pow(3, st - 1.0);"
+                                                                             "              a_const.x = a_const.x + w / pow(3.0, st - 1.0);"
                                                                              "          }"
                                                                              "          ++iter;"
-                                                                             "          ++st;"
+                                                                             "          st += 1.0;"
                                                                              "      }"
 
                                                                              "      st = 1.0;"
@@ -740,7 +737,7 @@ void FractalWindowRenderer::initialization()
                                                                              "      iter = 2;"
                                                                              "      while(iter != iter_koh){"
                                                                              "          c_const = c;"
-                                                                             "          for(int i = 0; i < pow(3, st - 1.0); ++i){"
+                                                                             "          for(int i = 0; float(i) < pow(3.0, st - 1.0); ++i){"
                                                                              "              a_n = r_a(c_const, znak, st, w, h);"
                                                                              "              b_n = r_b(c_const, znak, st, w, h);"
                                                                              "              c_n = r_c(c_const, znak, st, w, h);"
@@ -750,11 +747,11 @@ void FractalWindowRenderer::initialization()
                                                                              "                  return true;"
                                                                              "              if(iter == 4 && fifth(a_n, b_n, c_n,z) && i < 27)"
                                                                              "                  return true;"
-                                                                             "              c_const.x = c_const.x - w / (2 * pow(3, st - 1.0));"
-                                                                             "              c_const.y = c_const.y + znak * (h / pow(3, st - 1.0));"
+                                                                             "              c_const.x = c_const.x - w / (2.0 * pow(3.0, st - 1.0));"
+                                                                             "              c_const.y = c_const.y + znak * (h / pow(3.0, st - 1.0));"
                                                                              "          }"
                                                                              "          ++iter;"
-                                                                             "          ++st;"
+                                                                             "          st += 1.0;"
                                                                              "      }"
                                                                              "  }"
                                                                              "  return false;"
@@ -762,15 +759,19 @@ void FractalWindowRenderer::initialization()
 
 
                                                                              "void main() {"
-                                                                             "  vec2 z, a = a_base, b = b_base, c = c_base;"
-                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x;"
-                                                                             "  z.y = (coords.y - 0.22) * scale - center.y;"
+                                                                             "  vec2 z, a = a_base_koh, b = b_base_koh, c = c_base_koh;"
+                                                                             "  z.x = 1.3333 * (coords.x) * scale - center.x - offset.x;"
+                                                                             "  z.y = (coords.y - 0.22) * scale - center.y + offset.y;"
 
-                                                                             "  if(first(a_base, b_base, c_base, z))"
-                                                                             "      gl_FragColor = vec4(0.0, 120.0, 0.0, 1.0);"
+                                                                             "  if(first(a_base_koh, b_base_koh, c_base_koh, z)){"
+                                                                             "      gl_FragColor = vec4(0.5, 0.9, 0.5, 1.0);"
+                                                                             "  }"
+                                                                             "  else{"
+                                                                             "      gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);"
+                                                                             "  }"
 
                                                                              "}");
-        */
+        //*/
         m_program->bindAttributeLocation("vertices", 0);
         m_program->link();
 
@@ -826,6 +827,8 @@ void FractalWindowRenderer::paint()
         m_program->setUniformValue("a_base_koh", QPointF(-0.8, -0.7));
         m_program->setUniformValue("b_base_koh", QPointF(0.0, 0.7));
         m_program->setUniformValue("c_base_koh", QPointF(0.8, -0.7));
+
+
 
 
 
