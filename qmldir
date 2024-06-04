@@ -1,7 +1,0 @@
-module Prototype
-typeinfo appPrototype.qmltypes
-prefer :/Prototype/
-Main 1.0 Main.qml
-CustomScrollBar 1.0 CustomScrollBar.qml
-CustomButton 1.0 CustomButton.qml
-
