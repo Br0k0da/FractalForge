@@ -104,7 +104,7 @@ Item {
           onClicked: {
             scrollAria.currentIndex = index
 
-            fractalWindow.fractalType = index
+            fractalWindow.fractalType = index + 1
 
             root.clicked()
           }
