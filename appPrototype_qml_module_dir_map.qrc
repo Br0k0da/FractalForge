@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="/Prototype">D:/Programs/QT/projects/Prototype</file>
+
+  </qresource>
+</RCC>

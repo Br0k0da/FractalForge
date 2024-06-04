@@ -1,4 +1,10 @@
 #include "fractalwindowrenderer.h"
+<<<<<<< Updated upstream
+=======
+#include <QDebug>
+#include <QQuickWindow>
+#include <QSGRendererInterface>
+>>>>>>> Stashed changes
 
 
 FractalWindowRenderer::~FractalWindowRenderer()
@@ -9,8 +15,15 @@ FractalWindowRenderer::~FractalWindowRenderer()
 void FractalWindowRenderer::initialization()
 {
     if (!m_program) {
+<<<<<<< Updated upstream
         QSGRendererInterface *rif = m_window->rendererInterface();
         Q_ASSERT(rif->graphicsApi() == QSGRendererInterface::OpenGL);
+=======
+        // qInfo() << fractalType << "fractalType";
+
+        // QSGRendererInterface *rif = m_window->rendererInterface();
+        // Q_ASSERT(rif->graphicsApi() == QSGRendererInterface::OpenGL);
+>>>>>>> Stashed changes
 
         initializeOpenGLFunctions();
 
@@ -23,7 +36,12 @@ void FractalWindowRenderer::initialization()
                                                     "    coords = vertices.xy;"
                                                     "}");
         //Фрактал Мандельброта
+<<<<<<< Updated upstream
         /*
+=======
+        ///*
+        if(fractalType == 1 )
+>>>>>>> Stashed changes
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
                                                                              "uniform int iter;"
@@ -56,7 +74,11 @@ void FractalWindowRenderer::initialization()
         */
 
         // Фрактал Жюлье
+<<<<<<< Updated upstream
         /*
+=======
+        if(fractalType == 2)
+>>>>>>> Stashed changes
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform float scale;"
                                                                              "uniform float a_gulie;"
@@ -91,7 +113,11 @@ void FractalWindowRenderer::initialization()
                                                                              "}");
         */
         // Треугольники Серпинского
+<<<<<<< Updated upstream
         ///*
+=======
+        if(fractalType == 3)
+>>>>>>> Stashed changes
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform vec2 a_base_triangle;"
                                                                              "uniform vec2 b_base_triangle;"
@@ -169,7 +195,11 @@ void FractalWindowRenderer::initialization()
 
 
         // Ковёр Серпинского
+<<<<<<< Updated upstream
         /*
+=======
+        if(fractalType == 4)
+>>>>>>> Stashed changes
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform vec2 a_base_square;"
                                                                              "uniform vec2 b_base_square;"
@@ -248,7 +278,11 @@ void FractalWindowRenderer::initialization()
                                                                              "}");
         */
         // Снежинка Коха (доработка)
+<<<<<<< Updated upstream
         /*
+=======
+        if(fractalType == 5)
+>>>>>>> Stashed changes
         m_program->addCacheableShaderFromSourceCode(QOpenGLShader::Fragment, "uniform vec2 center;"
                                                                              "uniform vec2 a_base;"
                                                                              "uniform vec2 b_base;"
@@ -706,7 +740,15 @@ void FractalWindowRenderer::paint()
 {
     m_window->beginExternalCommands();
 
+<<<<<<< Updated upstream
     m_program->bind();
+=======
+    if(m_program)
+    {
+
+
+        m_window->beginExternalCommands();
+>>>>>>> Stashed changes
 
     // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
